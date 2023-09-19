@@ -1,12 +1,11 @@
 package ke.pe.gbpark.domain;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
-import lombok.experimental.SuperBuilder;
 
 @Getter
 @Inheritance(strategy = InheritanceType.JOINED)
-@SuperBuilder
 public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,6 +16,7 @@ public class Board {
     @Lob
     private String content;
 
+    @Builder
     public Board(String title, String content) {
         this.title = title;
         this.content = content;

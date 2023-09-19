@@ -12,7 +12,7 @@ public class GuestBook extends Board{
     private String email;
     private String ip;
 
-    @Builder
+    @Builder(builderMethodName = "guestBookBuilder")
     public GuestBook(String title, String content, String writer, String password, String email, String ip) {
         super(title, content);
         this.writer = writer;
@@ -20,4 +20,5 @@ public class GuestBook extends Board{
         this.email = email;
         this.ip = ip;
     }
+
 }

@@ -20,7 +20,7 @@ class GuestBookControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    @DisplayName("/guestbook 등록 테스트")
+    @DisplayName("/guestbook insert test")
     void postGuestBookTest() throws Exception {
         // given
 
@@ -33,7 +33,7 @@ class GuestBookControllerTest {
     }
 
     @Test
-    @DisplayName("/guestbook 등록 테스트")
+    @DisplayName("/guestbook validation test")
     void postGuestBookValidTitleTest() throws Exception {
         // given
 

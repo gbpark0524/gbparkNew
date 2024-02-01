@@ -30,7 +30,7 @@ public class GuestBookController {
         }
 
         log.info("remoteAddr : {}", remoteAddr);
-        log.info("request : {}", request.toString());
+        log.info("request : {}", request);
 
         guestBookService.write(request);
     }

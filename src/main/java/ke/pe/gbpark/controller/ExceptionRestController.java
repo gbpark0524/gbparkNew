@@ -18,14 +18,13 @@ public class ExceptionRestController {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ExceptionResponse invalidRequestHandler(MethodArgumentNotValidException e) {
         List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
-        StringBuilder sb = new StringBuilder();
-        for (FieldError fieldError : fieldErrors) {
-            sb.append(fieldError.getDefaultMessage()).append(",");
-        }
-        sb.deleteCharAt(sb.length() - 1);
-        return ExceptionResponse.builder()
+        ExceptionResponse response = ExceptionResponse.builder()
                 .code("400")
-                .message(sb.toString())
+                .message("Invalid parameter")
                 .build();
+        for (FieldError fieldError : fieldErrors) {
+            response.addTarget(fieldError.getField(), fieldError.getDefaultMessage());
+        }
+        return response;
     }
 }

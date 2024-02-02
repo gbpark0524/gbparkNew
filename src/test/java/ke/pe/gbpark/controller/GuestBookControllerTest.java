@@ -76,8 +76,8 @@ class GuestBookControllerTest {
                         .content(json))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("400"))
-                .andExpect(jsonPath("$.message").value("title is mandatory"))
-                .andExpect(jsonPath("$.target").value(""))
+                .andExpect(jsonPath("$.message").value("Invalid parameter"))
+                .andExpect(jsonPath("$.target.title").value("title is mandatory"))
                 .andDo(print());
     }
 }

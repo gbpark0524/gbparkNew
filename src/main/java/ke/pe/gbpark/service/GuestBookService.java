@@ -3,6 +3,7 @@ package ke.pe.gbpark.service;
 import ke.pe.gbpark.domain.GuestBook;
 import ke.pe.gbpark.repository.GuestBookRepository;
 import ke.pe.gbpark.request.GuestBookCreate;
+import ke.pe.gbpark.response.GuestBookResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,5 +26,15 @@ public class GuestBookService {
                         .build();
 
         guestBookRepository.save(guestBook);
+    }
+
+    public GuestBookResponse get(Long id) {
+        GuestBook guestBook = guestBookRepository.findById(id).orElseThrow();
+        return GuestBookResponse.builder()
+                .id(id)
+                .title(guestBook.getTitle())
+                .content(guestBook.getContent())
+                .writer(guestBook.getWriter())
+                .build();
     }
 }

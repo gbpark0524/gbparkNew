@@ -40,4 +40,9 @@ public class GuestBookController {
     @GetMapping("/guestbook/{guestBookId}")
     public void getGuestBook(@PathVariable(name="guestBookId") Long id) {
     }
+
+    @GetMapping("/api/test")
+    public String test() {
+        return "test";
+    }
 }

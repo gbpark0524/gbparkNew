@@ -1,13 +1,34 @@
 <template>
   <img alt="Vue logo" src="./assets/logo.png">
+  {{test2}}
   <HelloWorld msg="Welcome to Your Vue.js App"/>
 </template>
 
 <script>
 import HelloWorld from './components/HelloWorld.vue'
+import axios from 'axios';
 
 export default {
   name: 'App',
+  data() {
+    return {
+      test2 : ''
+    };
+  },
+  methods: {
+    test() {
+      axios.get('/api/test')
+          .then(response => {
+            this.test2 = response.data;
+          })
+          .catch(error => {
+            console.error("There was an error fetching the projects!", error);
+          });
+    }
+  },
+  mounted() {
+    this.test();
+  },
   components: {
     HelloWorld
   }
@@ -16,7 +37,7 @@ export default {
 
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Noto Sans", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

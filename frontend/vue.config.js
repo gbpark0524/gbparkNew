@@ -11,5 +11,13 @@ module.exports = defineConfig({
         changeOrigin: true
       }
     }
+  },
+  css: {
+    loaderOptions: {
+      sass: {
+        // You can inject shared variables, mixins, functions globally here
+        additionalData: `@import "@/styles/_variables.scss";`
+      }
+    }
   }
 });

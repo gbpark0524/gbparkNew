@@ -1,5 +1,6 @@
 <template>
   <img alt="Vue logo" src="./assets/logo.png">
+  <div class="test"></div>
   {{test2}}
   <HelloWorld msg="Welcome to Your Vue.js App"/>
 </template>
@@ -43,5 +44,14 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+</style>
+<style lang="scss">
+@import "@/styles/_variables.scss";
+
+.test {
+  width: 100px;
+  height: 100px;
+  background-color: $primary-color;
 }
 </style>

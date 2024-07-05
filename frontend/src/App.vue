@@ -1,57 +1,28 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <div class="test"></div>
-  {{test2}}
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div id="app">
+    <AppHeader />
+    <router-view />
+    <BottomNav />
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-import axios from 'axios';
+import AppHeader from './components/AppHeader.vue';
+import BottomNav from './components/BottomNav.vue';
 
 export default {
-  name: 'App',
-  data() {
-    return {
-      test2 : ''
-    };
-  },
-  methods: {
-    test() {
-      axios.get('/api/test')
-          .then(response => {
-            this.test2 = response.data;
-          })
-          .catch(error => {
-            console.error("There was an error fetching the projects!", error);
-          });
-    }
-  },
-  mounted() {
-    this.test();
-  },
   components: {
-    HelloWorld
+    AppHeader,
+    BottomNav
   }
-}
+};
 </script>
 
-<style>
-#app {
-  font-family: "Noto Sans", sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
 <style lang="scss">
-@import "@/styles/_variables.scss";
+@import "@/assets/styles/_variables.scss";
 
-.test {
-  width: 100px;
-  height: 100px;
-  background-color: $primary-color;
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  color: #2c3e50;
 }
 </style>

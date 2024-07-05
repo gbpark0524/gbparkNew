@@ -16,7 +16,7 @@ module.exports = defineConfig({
     loaderOptions: {
       sass: {
         // You can inject shared variables, mixins, functions globally here
-        additionalData: `@import "@/styles/_variables.scss";`
+        additionalData: `@import "@/assets/styles/_variables.scss";`
       }
     }
   }

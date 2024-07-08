@@ -10,7 +10,7 @@ import { ref, onMounted, onBeforeUnmount } from 'vue';
 import axios from 'axios';
 
 export default {
-  name: 'Content',
+  name: 'AppContent',
   setup() {
     const items = ref([]);
     const page = ref(1);
@@ -19,8 +19,8 @@ export default {
     const loadMore = () => {
       if (loading.value) return;
       loading.value = true;
-      axios.get(`https://api.example.com/content?page=${page.value}`).then(response => {
-        items.value.push(...response.data);
+      axios.get(`https://reqres.in/api/users?page=${page.value}`).then(response => {
+        items.value.push(...response.data.data);
         page.value++;
         loading.value = false;
       });

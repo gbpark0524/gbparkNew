@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import Content from '../components/Content.vue';
+import Content from '../components/AppContent.vue';
 
 export default {
   name: 'HomePage',

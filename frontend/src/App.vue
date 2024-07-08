@@ -6,21 +6,21 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { Options, Vue } from 'vue-class-component';
 import AppHeader from './components/AppHeader.vue';
 import BottomNav from './components/BottomNav.vue';
 
-export default {
+@Options({
   components: {
     AppHeader,
     BottomNav
-  }
-};
+  },
+})
+export default class App extends Vue {}
 </script>
 
 <style lang="scss">
-@import "@/assets/styles/_variables.scss";
-
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   color: #2c3e50;

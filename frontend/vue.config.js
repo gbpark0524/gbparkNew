@@ -3,7 +3,8 @@ const path = require('path');
 
 module.exports = defineConfig({
   transpileDependencies: true,
-  outputDir: path.resolve(__dirname, '../src/main/resources/static'),
+  // outputDir: path.resolve(__dirname, '../src/main/resources/static'),
+  outputDir: path.resolve(__dirname, 'dist'),
   devServer: {
     proxy: {
       '/api': {
@@ -15,7 +16,6 @@ module.exports = defineConfig({
   css: {
     loaderOptions: {
       sass: {
-        // You can inject shared variables, mixins, functions globally here
         additionalData: `@import "@/assets/styles/_variables.scss";`
       }
     }

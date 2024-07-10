@@ -1,6 +1,6 @@
 <template>
   <div id="content">
-    <div class="content-item" v-for="item in items" :key="item.id">{{ item.text }}</div>
+    <div class="content-item" v-for="item in items" :key="item.id">{{ item.first_name }}</div>
     <div v-if="loading" class="loading">Loading...</div>
   </div>
 </template>

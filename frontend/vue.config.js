@@ -4,6 +4,9 @@ const path = require('path');
 module.exports = defineConfig({
   transpileDependencies: true,
   // outputDir: path.resolve(__dirname, '../src/main/resources/static'),
+  configureWebpack: {
+    devtool: 'source-map'
+  },
   outputDir: path.resolve(__dirname, 'dist'),
   devServer: {
     proxy: {

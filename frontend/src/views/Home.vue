@@ -4,7 +4,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import Content from '../components/AppContent.vue';
 
 export default {

@@ -16,14 +16,14 @@
   </header>
 </template>
 
-<script>
+<script lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 
 export default {
   name: 'AppHeader',
   setup() {
-    const isMenuOpen = ref(false);
-    const isSticky = ref(false);
+    const isMenuOpen = ref<boolean>(false);
+    const isSticky = ref<boolean>(false);
 
     const toggleMenu = () => {
       isMenuOpen.value = !isMenuOpen.value;

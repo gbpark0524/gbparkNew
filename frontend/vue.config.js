@@ -10,12 +10,12 @@ module.exports = defineConfig({
   outputDir: path.resolve(__dirname, 'dist'),
   devServer: {
     proxy: {
-      '/api': {
-        target: 'http://localhost:8080',
+      '/*': {
+        target: 'http://localhost:9090',
         changeOrigin: true
       }
     },
-    port: 8090
+    port: 9091
   },
   css: {
     loaderOptions: {

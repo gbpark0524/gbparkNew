@@ -25,7 +25,7 @@ public class GuestBookController {
         String remoteAddr = "";
         if (httpServletRequest != null) {
             remoteAddr = httpServletRequest.getHeader("X-FORWARDED-FOR");
-            if (!StringUtils.isEmpty(remoteAddr)) {
+            if (StringUtils.isEmpty(remoteAddr)) {
                 remoteAddr = httpServletRequest.getRemoteAddr();
                 request.setIp(remoteAddr);
             }

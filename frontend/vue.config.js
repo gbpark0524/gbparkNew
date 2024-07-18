@@ -12,7 +12,8 @@ module.exports = defineConfig({
     proxy: {
       '/*': {
         target: 'http://localhost:9090',
-        changeOrigin: true
+        changeOrigin: true,
+        ws: false,
       }
     },
     port: 9091

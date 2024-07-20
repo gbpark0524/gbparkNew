@@ -1,6 +1,7 @@
 package ke.pe.gbpark.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.transaction.Transactional;
 import ke.pe.gbpark.repository.GuestBookRepository;
 import ke.pe.gbpark.request.GuestBookCreate;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @AutoConfigureMockMvc
 @SpringBootTest
+@Transactional
 class GuestBookControllerTest {
     @Autowired
     private ObjectMapper objectMapper;

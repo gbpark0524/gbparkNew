@@ -7,7 +7,7 @@
     <div class="paper-back">
     </div>
     <div class="paper-front">
-      <h3>Share Your Idea</h3>
+      <h3>Guestbook</h3>
       <div class="contents">
         <form>
           <div>

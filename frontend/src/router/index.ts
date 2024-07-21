@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from '@/views/Home.vue';
 import Layout from '@/components/MainLayout.vue'
+import Guestbook from "@/views/GuestbookView.vue";
 
 const routes = [
     {
@@ -8,9 +9,13 @@ const routes = [
         component: Layout,
         children: [
             {
-                path: '',
+                path: '/',
                 component: Home
             },
+            {
+                path: '/guestbookMain',
+                component: Guestbook
+            }
         ]
     }
 ];

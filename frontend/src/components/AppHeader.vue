@@ -7,8 +7,8 @@
         <div class="bar"></div>
       </div>
       <ul :class="{ open: isMenuOpen }">
-        <li><a href="#home" @click="closeMenu">Home</a></li>
-        <li><a href="#about" @click="closeMenu">About</a></li>
+        <li><router-link to="/" @click="closeMenu">Home</router-link></li>
+        <li><router-link to="/guestbookMain" @click="closeMenu">guestbook</router-link></li>
         <li><a href="#projects" @click="closeMenu">Projects</a></li>
         <li><a href="#contact" @click="closeMenu">Contact</a></li>
       </ul>

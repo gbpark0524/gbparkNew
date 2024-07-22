@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import {createRouter, createWebHashHistory, createWebHistory} from 'vue-router';
 import Home from '@/views/Home.vue';
 import Layout from '@/components/MainLayout.vue'
 import Guestbook from "@/views/GuestbookView.vue";
@@ -13,7 +13,7 @@ const routes = [
                 component: Home
             },
             {
-                path: '/guestbookMain',
+                path: 'guestbookMain',
                 component: Guestbook
             }
         ]
@@ -21,7 +21,7 @@ const routes = [
 ];
 
 const router = createRouter({
-    history: createWebHistory(process.env.baseURL),
+    history: createWebHashHistory(process.env.baseURL),
     routes
 });
 

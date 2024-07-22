@@ -2,21 +2,8 @@ const { defineConfig } = require('@vue/cli-service');
 const path = require('path');
 
 module.exports = defineConfig({
-  transpileDependencies: true,
-  // outputDir: path.resolve(__dirname, '../src/main/resources/static'),
   configureWebpack: {
     devtool: 'source-map'
-  },
-  outputDir: path.resolve(__dirname, 'dist'),
-  devServer: {
-    proxy: {
-      '/*': {
-        target: 'http://localhost:9090',
-        changeOrigin: true,
-        ws: false,
-      }
-    },
-    port: 9091
   },
   css: {
     loaderOptions: {
@@ -24,5 +11,19 @@ module.exports = defineConfig({
         additionalData: `@import "@/assets/styles/_variables.scss";`
       }
     }
-  }
+  },
+  devServer: {
+    historyApiFallback: true,
+    port: 9091,
+    proxy: {
+      '/*': {
+        target: 'http://localhost:9090',
+        changeOrigin: true,
+        ws: false,
+      }
+    },
+  },
+  outputDir: path.resolve(__dirname, 'dist'),
+  // outputDir: path.resolve(__dirname, '../src/main/resources/static'),
+  transpileDependencies: true,
 });

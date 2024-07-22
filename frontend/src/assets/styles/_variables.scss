@@ -8,7 +8,7 @@ $mobile: 768px;
   align-items: center;
 }
 
-@mixin sm--screen {
+@mixin mo--screen {
   @media screen and (max-width: #{$mobile}) {
     @content;
   }

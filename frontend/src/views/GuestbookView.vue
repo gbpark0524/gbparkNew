@@ -10,17 +10,17 @@
       <h3>Guestbook</h3>
       <div class="contents">
         <form>
-          <div>
+          <div class="div-form">
             <label>Name</label>
             <input type="text" />
           </div>
-          <div>
+          <div class="div-form">
             <label>Email</label>
             <input type="email" />
           </div>
-          <div>
-            <label>Comments</label> <br/>
-            <textarea rows="3" name="comments"></textarea>
+          <div class="div-form">
+            <label>Dear gbPark</label> <br/>
+            <textarea rows="17" name="comments"></textarea>
           </div>
         </form>
       </div>
@@ -37,28 +37,31 @@ body {
 
 .container {
   @include flex-center;
+  padding : 125px 0;
 }
 
 .paper-back, .paper-front {
   width: 1000px;
-  height: 600px;
-  position: absolute;
+  height: 700px;
   box-shadow: 0 2px 2px #ccc;
   background: #fff;
 
-  @media (max-width: 768px) {
-    width: 300px;
-    height: 400px;
+  @include mo--screen {
+    width: 80%;
     transform: rotate(-10deg);
   }
 
   &.paper-back {
     transform: rotate(-15deg);
+    position: relative;
   }
 
   &.paper-front {
+    position: absolute;
     transform: rotate(3deg);
     background-size: 144% 133%;
+    display: flex;
+    flex-direction: column;
 
     h3 {
       display: block;
@@ -76,6 +79,11 @@ body {
 .contents {
   width: 80%;
   margin: 10px auto;
+  flex: 1 auto;
+
+  .div-form {
+    margin-top: 10px;
+  }
 }
 
 input[type="text"], input[type="email"], textarea {

@@ -89,7 +89,8 @@ header {
       text-decoration: none;
     }
   }
-  @media (max-width: 768px) {
+
+  @include mo--screen {
     .menu-icon {
       display: flex;
     }

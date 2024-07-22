@@ -1,2 +1,15 @@
 $primary-color: #3498db;
 $secondary-color: #2ecc71;
+$mobile: 768px;
+
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin sm--screen {
+  @media screen and (max-width: #{$mobile}) {
+    @content;
+  }
+}

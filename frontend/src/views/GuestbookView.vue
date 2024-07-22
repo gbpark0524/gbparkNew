@@ -36,20 +36,19 @@ body {
 }
 
 .container {
-  margin: 50px auto;
-  width: 300px;
+  @include flex-center;
 }
 
 .paper-back, .paper-front {
-  width: 300px;
-  height: 400px;
+  width: 1000px;
+  height: 600px;
   position: absolute;
   box-shadow: 0 2px 2px #ccc;
   background: #fff;
 
   @media (max-width: 768px) {
-    width: 80%;
-    height: auto;
+    width: 300px;
+    height: 400px;
     transform: rotate(-10deg);
   }
 

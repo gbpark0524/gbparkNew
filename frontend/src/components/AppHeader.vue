@@ -54,7 +54,7 @@ export default {
 header {
   position: relative;
   width: 100%;
-  background: #333;
+  background: $primary-color;
   color: white;
   &.sticky {
     position: fixed;
@@ -102,11 +102,12 @@ header {
       right: 0;
       background: $primary-color;
       width: 100%;
+      z-index: 1000;
       &.open {
         display: flex;
       }
       li {
-        margin: 1rem 0;
+        margin: 1rem;
       }
     }
   }

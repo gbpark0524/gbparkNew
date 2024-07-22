@@ -12,7 +12,7 @@
   position: fixed;
   bottom: 0;
   width: 100%;
-  background: #333;
+  background: $primary-color;
   color: white;
   display: flex;
   justify-content: space-around;

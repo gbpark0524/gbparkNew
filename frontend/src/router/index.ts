@@ -25,4 +25,9 @@ const router = createRouter({
     routes
 });
 
+router.beforeEach((to, from, next) => {
+    document.title = 'gbPark';
+    next();
+});
+
 export default router;

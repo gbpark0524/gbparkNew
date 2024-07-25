@@ -1,12 +1,25 @@
 package ke.pe.gbpark.domain;
 
-import jakarta.persistence.*;
-import lombok.Builder;
+import jakarta.persistence.DiscriminatorColumn;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.Lob;
+import ke.pe.gbpark.util.entity.BaseTimeEntity;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
+@NoArgsConstructor
+@Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Board {
+@DiscriminatorColumn
+public class Board extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -15,10 +28,4 @@ public class Board {
 
     @Lob
     private String content;
-
-    @Builder
-    public Board(String title, String content) {
-        this.title = title;
-        this.content = content;
-    }
 }

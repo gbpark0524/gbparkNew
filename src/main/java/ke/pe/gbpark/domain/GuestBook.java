@@ -1,12 +1,6 @@
 package ke.pe.gbpark.domain;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
-import ke.pe.gbpark.util.entity.BaseEntity;
-import ke.pe.gbpark.util.entity.BaseTimeEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,16 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class GuestBook extends BaseTimeEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private String title;
-
-    @Lob
-    private String content;
-
+public class GuestBook extends Board {
     private String writer;
     private String password;
     private String email;
@@ -32,8 +17,8 @@ public class GuestBook extends BaseTimeEntity {
 
     @Builder
     public GuestBook(String title, String content, String writer, String password, String email, String ip) {
-        this.title = title;
-        this.content = content;
+        setTitle(title);
+        setContent(content);
         this.writer = writer;
         this.password = password;
         this.email = email;
@@ -41,8 +26,8 @@ public class GuestBook extends BaseTimeEntity {
     }
 
     public void edit(GuestBookEditor guestBookEditor) {
-        title = guestBookEditor.getTitle();
-        content = guestBookEditor.getContent();
+        setTitle(guestBookEditor.getTitle());
+        setContent(guestBookEditor.getContent());
         writer = guestBookEditor.getWriter();
         password = guestBookEditor.getPassword();
         email = guestBookEditor.getEmail();

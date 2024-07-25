@@ -5,6 +5,7 @@ import ke.pe.gbpark.domain.GuestBook;
 import ke.pe.gbpark.repository.GuestBookRepository;
 import ke.pe.gbpark.request.GuestBookCreate;
 import ke.pe.gbpark.response.GuestBookResponse;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,11 @@ class GuestBookServiceTest {
 
     @Autowired
     GuestBookRepository guestBookRepository;
+
+    @BeforeEach
+    void setUp() {
+        guestBookRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("GuestBookService write test")

@@ -14,7 +14,7 @@ import java.util.Objects;
 public class NotionService {
     final Logger logger = LoggerFactory.getLogger(NotionService.class);
 
-    @Value("${notion.config.authorization}")
+    @Value("#{environment['config.notion']}")
     private String AUTHORIZATION;
 
     public String getNewNotionList(int pageSize, String next) {

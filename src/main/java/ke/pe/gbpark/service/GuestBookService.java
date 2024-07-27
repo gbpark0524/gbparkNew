@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -28,13 +30,13 @@ public class GuestBookService {
         guestBookRepository.save(guestBook);
     }
 
-    public GuestBookResponse get(Long id) {
-        GuestBook guestBook = guestBookRepository.findById(id).orElseThrow();
-        return GuestBookResponse.builder()
-                .id(id)
-                .title(guestBook.getTitle())
-                .content(guestBook.getContent())
-                .writer(guestBook.getWriter())
-                .build();
+    public Optional<GuestBookResponse> get(Long id) {
+        return guestBookRepository.findById(id)
+                .map(guestBook -> GuestBookResponse.builder()
+                        .id(id)
+                        .title(guestBook.getTitle())
+                        .content(guestBook.getContent())
+                        .writer(guestBook.getWriter())
+                        .build());
     }
 }

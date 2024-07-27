@@ -4,6 +4,8 @@ import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import ke.pe.gbpark.request.GuestBookCreate;
+import ke.pe.gbpark.response.GuestBookResponse;
+import ke.pe.gbpark.response.Response;
 import ke.pe.gbpark.service.GuestBookService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,11 +40,8 @@ public class GuestBookController {
     }
 
     @GetMapping("/guestbook/{guestBookId}")
-    public void getGuestBook(@PathVariable(name="guestBookId") Long id) {
+    public Response<GuestBookResponse> getGuestBook(@PathVariable(name="guestBookId") Long id) {
+        return null;        
     }
-
-    @GetMapping("/api/test")
-    public String test() {
-        return "test";
-    }
+    
 }

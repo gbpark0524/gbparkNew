@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -60,9 +62,11 @@ class GuestBookServiceTest {
         guestBookRepository.save(guestBook);
 
         // when
-        GuestBookResponse response = guestBookService.get(guestBook.getId());
+        Optional<GuestBookResponse> guestBookResponse = guestBookService.get(guestBook.getId());
 
         // then
+        assertTrue(guestBookResponse.isPresent());
+        GuestBookResponse response = guestBookResponse.get();
         assertNotNull(response);
         assertEquals(1L, guestBookRepository.count());
         assertEquals("title", response.getTitle());

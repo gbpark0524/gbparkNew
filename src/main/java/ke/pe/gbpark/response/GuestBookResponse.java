@@ -21,7 +21,7 @@ public class GuestBookResponse {
     @Builder
     public GuestBookResponse(Long id, String title, String content, String writer) {
         this.id = id;
-        this.title = title.substring(0, Math.min(title.length(), 10));
+        this.title = title;
         this.content = content;
         this.writer = writer;
     }

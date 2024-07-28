@@ -15,6 +15,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Objects;
+import java.util.Optional;
+
+import static ke.pe.gbpark.response.Response.*;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -40,8 +45,13 @@ public class GuestBookController {
     }
 
     @GetMapping("/guestbook/{guestBookId}")
-    public Response<GuestBookResponse> getGuestBook(@PathVariable(name="guestBookId") Long id) {
-        return null;        
+    public Response<?> getGuestBook(@PathVariable(name = "guestBookId") Long id) {
+        Optional<GuestBookResponse> guestBookResponse = guestBookService.get(id);
+        if (guestBookResponse.isPresent()) {
+            return new Response<>(true, SUCCESS_MESSAGE, guestBookResponse.get());
+        } else {
+            return new Response<>(false, EMPTY_MESSAGE, Optional.empty());
+        }
     }
     
 }

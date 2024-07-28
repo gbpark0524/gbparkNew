@@ -4,14 +4,19 @@ import jakarta.transaction.Transactional;
 import ke.pe.gbpark.domain.GuestBook;
 import ke.pe.gbpark.repository.GuestBookRepository;
 import ke.pe.gbpark.request.GuestBookCreate;
+import ke.pe.gbpark.request.GuestBookSearch;
 import ke.pe.gbpark.response.GuestBookResponse;
+import ke.pe.gbpark.response.PaginationResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -72,5 +77,29 @@ class GuestBookServiceTest {
         assertEquals("title", response.getTitle());
         assertEquals("con", response.getContent());
         assertEquals("me", response.getWriter());
+    }
+
+    @Test
+    void getList() {
+        // given
+        List<GuestBook> requestPosts = IntStream.range(0, 20)
+                .mapToObj(i -> GuestBook.builder()
+                        .title("foo" + i)
+                        .content("bar1" + i)
+                        .build())
+                .collect(Collectors.toList());
+
+        guestBookRepository.saveAll(requestPosts);
+
+        GuestBookSearch guestBookSearch = GuestBookSearch.builder()
+                .page(1)
+                .build();
+
+        // when
+        PaginationResponse<GuestBookResponse> guestBookResponsePaginationResponse = guestBookService.getList(guestBookSearch);
+
+        // then
+        assertEquals(10L, guestBookResponsePaginationResponse.getSize());
+        assertEquals("foo19", guestBookResponsePaginationResponse.getItems().get(0).getTitle());
     }
 }

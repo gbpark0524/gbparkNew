@@ -3,9 +3,12 @@ package ke.pe.gbpark.service;
 import ke.pe.gbpark.domain.GuestBook;
 import ke.pe.gbpark.repository.GuestBookRepository;
 import ke.pe.gbpark.request.GuestBookCreate;
+import ke.pe.gbpark.request.GuestBookSearch;
 import ke.pe.gbpark.response.GuestBookResponse;
+import ke.pe.gbpark.response.PaginationResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -38,5 +41,11 @@ public class GuestBookService {
                         .content(guestBook.getContent())
                         .writer(guestBook.getWriter())
                         .build());
+    }
+
+    public PaginationResponse<GuestBookResponse> getList(GuestBookSearch guestBookSearch) {
+        Page<GuestBook> guestBookPage = guestBookRepository.getList(guestBookSearch);
+        PaginationResponse<GuestBookResponse> paginationResponse = new PaginationResponse<>(guestBookPage, GuestBookResponse.class);
+        return paginationResponse;
     }
 }

@@ -3,8 +3,6 @@ package ke.pe.gbpark.repository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import ke.pe.gbpark.domain.GuestBook;
-import ke.pe.gbpark.domain.QBoard;
-import ke.pe.gbpark.domain.QGuestBook;
 import ke.pe.gbpark.request.GuestBookSearch;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

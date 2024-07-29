@@ -12,18 +12,20 @@ public class PageSearch {
 
     private static final int MAX_PAGE = 999;
     private static final int MAX_SIZE = 2000;
+    private static final int DEFAULT_PAGE = 1;
+    private static final int DEFAULT_SIZE = 10;
 
     @Builder.Default
-    private Integer page = 1;
+    private Integer page = DEFAULT_PAGE;
 
     @Builder.Default
-    private Integer size = 10;
+    private Integer size = DEFAULT_SIZE;
 
     PageSearch(){}
     
     public PageSearch(Integer page, Integer size) {
-        this.page = (page <= 0) ? 1 : Math.min(page, MAX_PAGE);
-        this.size = (size <= 0) ? 10 : Math.min(size, MAX_SIZE);
+        this.page = (page == null || page <= 0) ? DEFAULT_PAGE : Math.min(page, MAX_PAGE);
+        this.size = (size == null || size <= 0) ? DEFAULT_SIZE : Math.min(size, MAX_SIZE);
     }
 
     public long getOffset() {
@@ -33,5 +35,8 @@ public class PageSearch {
     public Pageable getPageable() {
         return PageRequest.of(page - 1, size);
     }
+    
+    public int getDefaultPage() {return DEFAULT_PAGE;}
+    public int getDefaultSize() {return DEFAULT_SIZE;}
 }
 

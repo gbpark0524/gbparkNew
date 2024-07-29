@@ -5,6 +5,7 @@ import ke.pe.gbpark.domain.GuestBook;
 import ke.pe.gbpark.repository.GuestBookRepository;
 import ke.pe.gbpark.request.GuestBookCreate;
 import ke.pe.gbpark.request.GuestBookSearch;
+import ke.pe.gbpark.request.PageSearch;
 import ke.pe.gbpark.response.GuestBookResponse;
 import ke.pe.gbpark.response.PaginationResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -80,6 +81,7 @@ class GuestBookServiceTest {
     }
 
     @Test
+    @DisplayName("GuestBookService get list test")
     void getList() {
         // given
         List<GuestBook> guestBooks = IntStream.range(0, 20)
@@ -102,4 +104,28 @@ class GuestBookServiceTest {
         assertEquals(10L, guestBookResponsePaginationResponse.getItems().size());
         assertEquals("foo19", guestBookResponsePaginationResponse.getItems().get(0).getTitle());
     }
+
+    @Test
+    @DisplayName("GuestBookService get list with default test")
+    void getListWithDefault() {
+        // given
+        List<GuestBook> guestBooks = IntStream.range(0, 20)
+                .mapToObj(i -> GuestBook.builder()
+                        .title("foo" + i)
+                        .content("bar1" + i)
+                        .build())
+                .collect(Collectors.toList());
+
+        guestBookRepository.saveAll(guestBooks);
+
+        GuestBookSearch guestBookSearch = GuestBookSearch.builder().build();
+
+        // when
+        PaginationResponse<GuestBookResponse> guestBookResponsePaginationResponse = guestBookService.getList(guestBookSearch);
+
+        // then
+        assertEquals(guestBookSearch.getDefaultSize(), guestBookResponsePaginationResponse.getItems().size());
+        assertEquals(guestBookSearch.getDefaultPage(), (int) guestBookResponsePaginationResponse.getPage());
+    }
+
 }

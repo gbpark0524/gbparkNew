@@ -82,14 +82,14 @@ class GuestBookServiceTest {
     @Test
     void getList() {
         // given
-        List<GuestBook> requestPosts = IntStream.range(0, 20)
+        List<GuestBook> guestBooks = IntStream.range(0, 20)
                 .mapToObj(i -> GuestBook.builder()
                         .title("foo" + i)
                         .content("bar1" + i)
                         .build())
                 .collect(Collectors.toList());
 
-        guestBookRepository.saveAll(requestPosts);
+        guestBookRepository.saveAll(guestBooks);
 
         GuestBookSearch guestBookSearch = GuestBookSearch.builder()
                 .page(1)
@@ -99,7 +99,7 @@ class GuestBookServiceTest {
         PaginationResponse<GuestBookResponse> guestBookResponsePaginationResponse = guestBookService.getList(guestBookSearch);
 
         // then
-        assertEquals(10L, guestBookResponsePaginationResponse.getSize());
+        assertEquals(10L, guestBookResponsePaginationResponse.getItems().size());
         assertEquals("foo19", guestBookResponsePaginationResponse.getItems().get(0).getTitle());
     }
 }

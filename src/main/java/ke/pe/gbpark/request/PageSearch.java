@@ -19,15 +19,11 @@ public class PageSearch {
     @Builder.Default
     private Integer size = 10;
 
-    @Builder.Default
-    private String search = "";
-
     PageSearch(){}
     
-    public PageSearch(Integer page, Integer size, String search) {
+    public PageSearch(Integer page, Integer size) {
         this.page = (page <= 0) ? 1 : Math.min(page, MAX_PAGE);
         this.size = (size <= 0) ? 10 : Math.min(size, MAX_SIZE);
-        this.search = search;
     }
 
     public long getOffset() {

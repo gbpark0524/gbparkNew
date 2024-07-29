@@ -16,6 +16,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import static org.hamcrest.Matchers.is;
 import static org.springframework.http.MediaType.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -111,6 +116,28 @@ class GuestBookControllerTest {
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.message").value(Response.SUCCESS_MESSAGE))
                 .andExpect(content().json(expectedJson, true)) 
+                .andDo(print());
+    }
+
+    @Test
+    void getPaginationGuestBook() throws Exception {
+        // given
+        List<GuestBook> guestBooks = IntStream.range(0, 20)
+                .mapToObj(i -> GuestBook.builder()
+                        .title("foo" + i)
+                        .content("bar" + i)
+                        .build())
+                .toList();
+
+        guestBookRepository.saveAll(guestBooks);
+
+        // expected
+        mockMvc.perform(get("/board/guestbooks?page=1&size=10")
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.items.length()", is(10)))
+                .andExpect(jsonPath("$.items[0].title").value("foo19"))
+                .andExpect(jsonPath("$.items[0].content").value("bar19"))
                 .andDo(print());
     }
 }

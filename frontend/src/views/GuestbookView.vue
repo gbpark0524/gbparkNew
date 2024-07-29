@@ -36,7 +36,7 @@ const formData = ref({ title: '', writer:'', email: '', content:'' });
 
 const submitForm = async () => {
   try {
-    const response = await axios.post('/guestbook', formData.value);
+    const response = await axios.post('/board/guestbook', formData.value);
     alert(response);
     formData.value = { title: '', writer:'', email: '', content:'' };
   } catch (error) {

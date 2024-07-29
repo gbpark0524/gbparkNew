@@ -56,7 +56,7 @@ class GuestBookControllerTest {
         String json = objectMapper.writeValueAsString(guestBookCreate);
 
         // expected
-        mockMvc.perform(post("/guestbook")
+        mockMvc.perform(post("/board/guestbook")
                         .contentType(APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isOk())
@@ -79,7 +79,7 @@ class GuestBookControllerTest {
         String json = objectMapper.writeValueAsString(guestBookCreate);
 
         // expected
-        mockMvc.perform(post("/guestbook")
+        mockMvc.perform(post("/board/guestbook")
                         .contentType(APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isBadRequest())
@@ -105,7 +105,7 @@ class GuestBookControllerTest {
         String expectedJson = objectMapper.writeValueAsString(response);
 
         // expected
-        mockMvc.perform(get("/guestbook/" + guestBook.getId())
+        mockMvc.perform(get("/board/guestbook/" + guestBook.getId())
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))

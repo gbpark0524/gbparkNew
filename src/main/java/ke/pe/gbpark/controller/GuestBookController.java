@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Objects;
 import java.util.Optional;
 
 import static ke.pe.gbpark.response.Response.*;
@@ -27,7 +26,7 @@ public class GuestBookController {
 
     private final GuestBookService guestBookService;
 
-    @PostMapping("/guestbook")
+    @PostMapping("/board/guestbook")
     public void postGuestBook(@RequestBody @Valid GuestBookCreate request, HttpServletRequest httpServletRequest) {
         String remoteAddr = "";
         if (httpServletRequest != null) {
@@ -44,7 +43,7 @@ public class GuestBookController {
         guestBookService.write(request);
     }
 
-    @GetMapping("/guestbook/{guestBookId}")
+    @GetMapping("/board/guestbook/{guestBookId}")
     public Response<?> getGuestBook(@PathVariable(name = "guestBookId") Long id) {
         Optional<GuestBookResponse> guestBookResponse = guestBookService.get(id);
         if (guestBookResponse.isPresent()) {

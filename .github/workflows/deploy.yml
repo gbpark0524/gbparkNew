@@ -38,8 +38,7 @@ jobs:
         java-version: '17'
 
     - name: Build Spring Boot application
-      run: ./gradlew clean build -x test
-      working-directory: ./backend
+      run: ./gradlew build -x test
 
     - name: Deploy to EC2
       env:
@@ -56,7 +55,7 @@ jobs:
         export DB_USER="$DB_USER"
         echo "$PRIVATE_KEY" > private_key.pem
         chmod 600 private_key.pem
-        scp -i private_key.pem -o StrictHostKeyChecking=no ./backend/build/libs/*.jar ec2-user@"$DEPLOY_IP":/home/ec2-user/app.jar
+        scp -i private_key.pem -o StrictHostKeyChecking=no ./build/libs/*.jar ec2-user@"$DEPLOY_IP":/home/ec2-user/app.jar
         ssh -i private_key.pem -o StrictHostKeyChecking=no ec2-user@"$DEPLOY_IP" << 'EOF'
           # 스프링 부트 애플리케이션 재시작
           pkill -f 'java -jar' || true

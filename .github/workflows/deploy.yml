@@ -46,20 +46,12 @@ jobs:
       env:
         PRIVATE_KEY: ${{ secrets.GBPARK_KEY }}
         DEPLOY_IP: ${{ secrets.GBPARK_HOST }}
-        DB_DRIVER: ${{secrets.GBPARK_DB_USER}}
-        DB_PASS  : ${{secrets.GBPARK_DB_URL}}
-        DB_URL   : ${{secrets.GBPARK_DB_PASS}}
-        DB_USER  : ${{secrets.GBPARK_DB_DRIVER}}
       run: |
         echo "$PRIVATE_KEY" > private_key.pem
         chmod 400 private_key.pem
         scp -i private_key.pem -o StrictHostKeyChecking=no ./build/libs/gbpark.jar ec2-user@"$DEPLOY_IP":/home/ec2-user/gbpark.jar
         ssh -i private_key.pem -o StrictHostKeyChecking=no ec2-user@"$DEPLOY_IP" << 'EOF'
           # 스프링 부트 애플리케이션 재시작
-          export DB_DRIVER="$DB_DRIVER"
-          export DB_PASS="$DB_PASS"
-          export DB_URL="$DB_URL"
-          export DB_USER="$DB_USER"
           pkill -f 'java -jar' || true
           sudo -E nohup java -jar /home/ec2-user/gbpark.jar > /home/ec2-user/app.log 2>&1 &
         EOF

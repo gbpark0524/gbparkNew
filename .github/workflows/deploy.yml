@@ -38,7 +38,9 @@ jobs:
         java-version: '17'
 
     - name: Build Spring Boot application
-      run: ./gradlew build -x test
+      run: |
+        chmod +x ./gradlew
+        ./gradlew build -x test
 
     - name: Deploy to EC2
       env:

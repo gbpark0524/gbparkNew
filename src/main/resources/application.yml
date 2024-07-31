@@ -1,0 +1,43 @@
+server:
+  port: 9090
+
+logging:
+  pattern:
+    dateformat: YY-MM-dd HH:mm:ss, Asia/Seoul
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
+
+spring:
+  mvc:
+    static-path-pattern: /**
+
+  datasource:
+    url: ${GBPARK_DB_URL}
+    username: ${GBPARK_DB_USER}
+    password: ${GBPARK_DB_PASS}
+    driver-class-name: ${GBPARK_DB_DRIVER}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+    properties:
+      hibernate:
+        show_sql: true
+        use_sql_comments: true
+
+  data:
+    web:
+      pageable:
+        max-page-size: 2000
+        default-page-size: 20
+        one-indexed-parameters: true
+
+  web:
+    resources:
+      static-locations: classpath:/static/
+

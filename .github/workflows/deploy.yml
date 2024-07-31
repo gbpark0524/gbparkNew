@@ -1,0 +1,59 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - deploy  # 배포할 브랜치
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '20'  # Node.js 버전
+
+    - name: Install frontend dependencies
+      working-directory: ./frontend
+      run: npm install
+
+    - name: Build frontend
+      working-directory: ./frontend
+      run: npm run build
+
+    - name: Move build to Spring Boot static folder
+      run: |
+        rm -rf ./backend/src/main/resources/static/*
+        cp -r ./frontend/build/* ./backend/src/main/resources/static/
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v2
+      with:
+        distribution: 'adopt'
+        java-version: '17'
+
+    - name: Build Spring Boot application
+      run: ./gradlew clean build -x test
+      working-directory: ./backend
+
+    - name: Deploy to EC2
+      env:
+        PRIVATE_KEY: ${{ secrets.GBPARK_KEY }}
+        DEPLOY_IP: ${{ secrets.GBPARK_HOST }}
+      run: |
+        echo "$PRIVATE_KEY" > private_key.pem
+        chmod 600 private_key.pem
+        scp -i private_key.pem -o StrictHostKeyChecking=no ./backend/build/libs/*.jar ec2-user@your-ec2-ip:/home/ec2-user/app.jar
+        ssh -i private_key.pem -o StrictHostKeyChecking=no ec2-user@"$DEPLOY_IP" << 'EOF'
+          # 스프링 부트 애플리케이션 재시작
+          pkill -f 'java -jar' || true
+          nohup java -jar --server.port 80 /home/ec2-user/app.jar > /home/ec2-user/app.log 2>&1 &
+        EOF
+
+    - name: Clean up
+      run: rm private_key.pem

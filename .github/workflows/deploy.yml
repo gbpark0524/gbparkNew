@@ -61,7 +61,7 @@ jobs:
           export DB_URL="$DB_URL"
           export DB_USER="$DB_USER"
           pkill -f 'java -jar' || true
-          sudo nohup java -jar /home/ec2-user/gbpark.jar > /home/ec2-user/app.log 2>&1 &
+          sudo -E nohup java -jar /home/ec2-user/gbpark.jar > /home/ec2-user/app.log 2>&1 &
         EOF
 
     - name: Clean up

@@ -3,7 +3,7 @@ name: Build and Deploy
 on:
   push:
     branches:
-      - deploy  # 배포할 브랜치
+      - deploy
 
 jobs:
   build:
@@ -16,7 +16,7 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '20'  # Node.js 버전
+        node-version: '20'
 
     - name: Install frontend dependencies
       working-directory: ./frontend
@@ -57,11 +57,11 @@ jobs:
         export DB_USER="$DB_USER"
         echo "$PRIVATE_KEY" > private_key.pem
         chmod 600 private_key.pem
-        scp -i private_key.pem -o StrictHostKeyChecking=no ./build/libs/*.jar ec2-user@"$DEPLOY_IP":/home/ec2-user/app.jar
+        scp -i private_key.pem -o StrictHostKeyChecking=no ./build/libs/gbpark.jar ec2-user@"$DEPLOY_IP":/home/ec2-user/gbpark.jar
         ssh -i private_key.pem -o StrictHostKeyChecking=no ec2-user@"$DEPLOY_IP" << 'EOF'
           # 스프링 부트 애플리케이션 재시작
           pkill -f 'java -jar' || true
-          nohup java -jar --server.port 80 /home/ec2-user/app.jar > /home/ec2-user/app.log 2>&1 &
+          nohup java -jar --server.port 80 /home/ec2-user/gbpark.jar > /home/ec2-user/app.log 2>&1 &
         EOF
 
     - name: Clean up

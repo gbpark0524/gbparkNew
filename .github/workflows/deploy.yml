@@ -29,6 +29,7 @@ jobs:
     - name: Move build to Spring Boot static folder
       run: |
         find ./src/main/resources/* -not -name 'application.yml' -delete
+        mkdir ./src/main/resources/static
         cp -r ./frontend/build/* ./src/main/resources/static/
 
     - name: Set up JDK 17

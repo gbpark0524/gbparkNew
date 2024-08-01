@@ -5,7 +5,11 @@ plugins {
 }
 
 group = 'ke.pe'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.1'
+
+bootJar {
+    archiveFileName = "gbpark.jar"
+}
 
 java {
     sourceCompatibility = '17'

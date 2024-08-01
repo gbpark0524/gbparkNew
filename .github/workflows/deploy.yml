@@ -3,7 +3,7 @@ name: Build and Deploy
 on:
   push:
     branches:
-      - deploy  # 배포할 브랜치
+      - deploy
 
 jobs:
   build:
@@ -16,7 +16,7 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '20'  # Node.js 버전
+        node-version: '20'
 
     - name: Install frontend dependencies
       working-directory: ./frontend
@@ -28,7 +28,8 @@ jobs:
 
     - name: Move build to Spring Boot static folder
       run: |
-        rm -rf ./src/main/resources/static/*
+        find ./src/main/resources/* -not -name 'application.yml' -delete
+        mkdir ./src/main/resources/static
         cp -r ./frontend/build/* ./src/main/resources/static/
 
     - name: Set up JDK 17
@@ -38,29 +39,22 @@ jobs:
         java-version: '17'
 
     - name: Build Spring Boot application
-      run: ./gradlew clean build -x test
-      working-directory: ./backend
+      run: |
+        chmod +x ./gradlew
+        ./gradlew build -x test
 
     - name: Deploy to EC2
       env:
         PRIVATE_KEY: ${{ secrets.GBPARK_KEY }}
         DEPLOY_IP: ${{ secrets.GBPARK_HOST }}
-        DB_DRIVER: ${{secrets.GBPARK_DB_USER}}
-        DB_PASS  : ${{secrets.GBPARK_DB_URL}}
-        DB_URL   : ${{secrets.GBPARK_DB_PASS}}
-        DB_USER  : ${{secrets.GBPARK_DB_DRIVER}}
       run: |
-        export DB_DRIVER="$DB_DRIVER"
-        export DB_PASS="$DB_PASS"
-        export DB_URL="$DB_URL"
-        export DB_USER="$DB_USER"
         echo "$PRIVATE_KEY" > private_key.pem
-        chmod 600 private_key.pem
-        scp -i private_key.pem -o StrictHostKeyChecking=no ./backend/build/libs/*.jar ec2-user@"$DEPLOY_IP":/home/ec2-user/app.jar
+        chmod 400 private_key.pem
+        scp -i private_key.pem -o StrictHostKeyChecking=no ./build/libs/gbpark.jar ec2-user@"$DEPLOY_IP":/home/ec2-user/gbpark.jar
         ssh -i private_key.pem -o StrictHostKeyChecking=no ec2-user@"$DEPLOY_IP" << 'EOF'
           # 스프링 부트 애플리케이션 재시작
-          pkill -f 'java -jar' || true
-          nohup java -jar --server.port 80 /home/ec2-user/app.jar > /home/ec2-user/app.log 2>&1 &
+          sudo pkill -f 'java -jar' || true
+          sudo -E nohup java -jar /home/ec2-user/gbpark.jar > /home/ec2-user/app.log 2>&1 &
         EOF
 
     - name: Clean up

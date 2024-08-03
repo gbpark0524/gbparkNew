@@ -1,6 +1,9 @@
 import React from 'react';
 import { Responsive, WidthProvider } from 'react-grid-layout';
-import { Paper, Typography } from '@mui/material';
+import { Paper} from '@mui/material';
+import GitHubPortlet from "./GitHubPortlet";
+import NotionPortlet from "./NotionPortlet";
+import YouTubePortlet from "./YouTubePortlet";
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 
@@ -13,6 +16,14 @@ const DraggableGrid = () => {
         { i: 'c', x: 4, y: 0, w: 2, h: 3 }
     ];
 
+    const pages = [
+        { title: '프로젝트 기획안', date: '8월 3일', url: 'https://notion.so/page1' },
+        { title: '회의록', date: '8월 1일', url: 'https://notion.so/page2' },
+        { title: '디자인 가이드라인', date: '7월 30일', url: 'https://notion.so/page3' },
+        { title: '주간 리포트', date: '7월 28일', url: 'https://notion.so/page4' },
+        { title: '마케팅 전략', date: '7월 26일', url: 'https://notion.so/page5' }
+    ];
+
     return (
         <ResponsiveGridLayout
             className="layout"
@@ -22,17 +33,17 @@ const DraggableGrid = () => {
             rowHeight={100}
             width={1000}
             isResizable={false}
-            isDraggable={true}
+            isDraggable={false}
             style={{width: '100%'}}
         >
             <Paper key="a" style={{ padding: 16 }}>
-                <Typography variant="h6">항목 A</Typography>
+                <NotionPortlet pages={pages}/>
             </Paper>
             <Paper key="b" style={{ padding: 16 }}>
-                <Typography variant="h6">항목 B</Typography>
+                <YouTubePortlet/>
             </Paper>
             <Paper key="c" style={{ padding: 16 }}>
-                <Typography variant="h6">항목 C</Typography>
+                <GitHubPortlet/>
             </Paper>
         </ResponsiveGridLayout>
     );

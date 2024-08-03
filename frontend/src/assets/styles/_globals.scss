@@ -9,3 +9,14 @@ img {
   height: auto;
   display: block;
 }
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.ff {
+  height: 100%;
+  width: 100%;
+}

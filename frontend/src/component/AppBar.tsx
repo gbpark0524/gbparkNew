@@ -63,7 +63,7 @@ function ResponsiveAppBar() {
                             textDecoration: 'none',
                         }}
                     >
-                        LOGO
+                        GBPARK
                     </Typography>
 
                     <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -89,7 +89,7 @@ function ResponsiveAppBar() {
                                 vertical: 'top',
                                 horizontal: 'left',
                             }}
-                            open={Boolean(!!anchorElNav)}
+                            open={Boolean(anchorElNav)}
                             onClose={handleCloseNavMenu}
                             sx={{
                                 display: { xs: 'block', md: 'none' },
@@ -119,7 +119,7 @@ function ResponsiveAppBar() {
                             textDecoration: 'none',
                         }}
                     >
-                        LOGO
+                        GBPARK
                     </Typography>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                         {pages.map((page) => (
@@ -152,7 +152,7 @@ function ResponsiveAppBar() {
                                 vertical: 'top',
                                 horizontal: 'right',
                             }}
-                            open={Boolean(!!anchorElUser)}
+                            open={Boolean(anchorElUser)}
                             onClose={handleCloseUserMenu}
                         >
                             {settings.map((setting) => (

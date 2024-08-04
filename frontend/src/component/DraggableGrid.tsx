@@ -1,9 +1,9 @@
 import React from 'react';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import { Paper} from '@mui/material';
-import GitHubPortlet from "./GitHubPortlet";
-import NotionPortlet from "./NotionPortlet";
-import YouTubePortlet from "./YouTubePortlet";
+import GitHubPortlet from "./portlet/GitHubPortlet";
+import NotionPortlet from "./portlet/NotionPortlet";
+import YouTubePortlet from "./portlet/YouTubePortlet";
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 

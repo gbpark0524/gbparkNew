@@ -13,6 +13,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Main />} />
                     <Route path="/guestbook" element={<Guestbook />} />
+                    <Route path="/*" element={<Main />} />
                 </Routes>
             </div>
         </div>

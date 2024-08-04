@@ -1,5 +1,5 @@
 import React from 'react';
-import '../assets/styles/YouTubePortlet.scss';
+import '../../assets/styles/YouTubePortlet.scss';
 
 const YouTubeMusicPlaylist: React.FC = () => {
     const playlistId = 'PLbkbDd3Tye668O935H5Zv6zym74VR3K3u';

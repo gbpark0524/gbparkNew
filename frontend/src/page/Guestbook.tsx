@@ -1,28 +1,58 @@
-import React from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
+import React, {useEffect, useState} from 'react';
+import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
+import axios, {AxiosResponse} from "axios";
+import {parseISO, format} from "date-fns";
+
+interface PaginatedResponse {
+    page: number;
+    size: number;
+    totalCount: number;
+    items: RowData[];
+}
 
 interface RowData {
     id: number;
     title: string;
-    author: string;
+    content: string;
+    writer: string;
     date: string;
 }
 
-function createData(id: number, title: string, author: string, date: string): RowData {
-    return { id, title, author, date};
-}
-
-const rows: RowData[] = [
-    createData(1, '첫 번째 게시글입니다.', '홍길동', '2023-05-01'),
-    createData(2, '두 번째 게시글입니다.', '김철수', '2023-05-02'),
-    createData(3, '세 번째 게시글입니다.', '이영희', '2023-05-03'),
-    // ... 더 많은 게시글 데이터
-];
+const formatDate = (dateString: string): string => {
+    const date = parseISO(dateString);
+    return format(date, 'yyyy-MM-dd');
+};
 
 const Guestbook = (): React.ReactElement => {
+    const [rows, setRows] = useState<RowData[]>([]);
+    // const [totalCount, setTotalCount] = useState<number>(0);
+    // const [currentPage, setCurrentPage] = useState<number>(1);
+    // const [pageSize, setPageSize] = useState<number>(10);
+
+    useEffect(() => {
+        axios.get<PaginatedResponse>('/board/guestbooks')
+            .then((response: AxiosResponse<PaginatedResponse>) => {
+                if (response.data && Array.isArray(response.data.items)) {
+                    const formattedRows = response.data.items.map(row => ({
+                        ...row,
+                        date: formatDate(row.date)
+                    }));
+                    setRows(formattedRows);
+                    // setTotalCount(response.data.totalCount);
+                    // setCurrentPage(response.data.page);
+                    // setPageSize(response.data.size);
+                } else {
+                    console.error('Received data is not in the expected format');
+                }
+            })
+            .catch((error) => {
+                console.error('Error fetching guestbooks:', error);
+            });
+    }, []);
+
     return (
         <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+            <Table sx={{minWidth: 650}} aria-label="simple table">
                 <TableHead>
                     <TableRow>
                         <TableCell>번호</TableCell>
@@ -35,13 +65,15 @@ const Guestbook = (): React.ReactElement => {
                     {rows.map((row: RowData) => (
                         <TableRow
                             key={row.id}
-                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                            sx={{'&:last-child td, &:last-child th': {border: 0}}}
+                            onClick={() => {
+                            }}
                         >
                             <TableCell component="th" scope="row">
                                 {row.id}
                             </TableCell>
                             <TableCell align="left">{row.title}</TableCell>
-                            <TableCell align="right">{row.author}</TableCell>
+                            <TableCell align="right">{row.writer}</TableCell>
                             <TableCell align="right">{row.date}</TableCell>
                         </TableRow>
                     ))}

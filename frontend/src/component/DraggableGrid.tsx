@@ -3,9 +3,10 @@ import { Responsive, WidthProvider } from 'react-grid-layout';
 import { Paper} from '@mui/material';
 import GitHubPortlet from "./portlet/GitHubPortlet";
 import NotionPortlet from "./portlet/NotionPortlet";
-import YouTubePortlet from "./portlet/YouTubePortlet";
+// import YouTubePortlet from "./portlet/YouTubePortlet";
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
+import devImg from '../assets/image/dev-gbpark.webp';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -40,7 +41,8 @@ const DraggableGrid = () => {
                 <NotionPortlet pages={pages}/>
             </Paper>
             <Paper key="b" style={{ padding: 16 }}>
-                <YouTubePortlet/>
+                {/*<YouTubePortlet/>*/}
+                <img src={devImg} alt="dot image"/>
             </Paper>
             <Paper key="c" style={{ padding: 16 }}>
                 <GitHubPortlet/>

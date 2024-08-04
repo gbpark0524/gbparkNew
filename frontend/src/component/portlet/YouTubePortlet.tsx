@@ -1,5 +1,4 @@
 import React from 'react';
-import '../../assets/styles/YouTubePortlet.scss';
 
 const YouTubeMusicPlaylist: React.FC = () => {
     const playlistId = 'PLbkbDd3Tye668O935H5Zv6zym74VR3K3u';
@@ -7,10 +6,10 @@ const YouTubeMusicPlaylist: React.FC = () => {
 
     return (
         <div className={['ff', 'flex-center'].join(' ')}>
-            <div className={'responsiveWrapper'}>
+            <div className={'ratio16x9'}>
                 <iframe
                     title={'youtube-music'}
-                    className={'responsiveIframe'}
+                    className={'ff'}
                     src={embedUrl}
                     allow="autoplay; encrypted-media"
                     allowFullScreen

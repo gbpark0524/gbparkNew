@@ -42,7 +42,7 @@ const DraggableGrid = () => {
             </Paper>
             <Paper key="b" style={{ padding: 16 }}>
                 {/*<YouTubePortlet/>*/}
-                <img src={devImg} alt="dot image"/>
+                <img src={devImg} alt="Developer portrayed in dots"/>
             </Paper>
             <Paper key="c" style={{ padding: 16 }}>
                 <GitHubPortlet/>

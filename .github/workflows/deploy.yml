@@ -43,6 +43,12 @@ jobs:
         chmod +x ./gradlew
         ./gradlew build -x test
 
+        
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
     - name: Deploy to EC2
       env:
         PRIVATE_KEY: ${{ secrets.GBPARK_KEY }}
@@ -54,6 +60,10 @@ jobs:
         ssh -i private_key.pem -o StrictHostKeyChecking=no ec2-user@"$DEPLOY_IP" << 'EOF'
           # 스프링 부트 애플리케이션 재시작
           sudo pkill -f 'java -jar' || true
+          while pgrep -f 'java -jar' > /dev/null; do
+            echo "Waiting for Java process to terminate..."
+            sleep 2
+          done
           sudo -E nohup java -jar /home/ec2-user/gbpark.jar > /home/ec2-user/app.log 2>&1 &
         EOF
 

@@ -56,16 +56,22 @@ jobs:
         aws-secret-access-key: ${{ secrets.GBPARK_ACC_SEC_KEY }}
         aws-region: ${{ env.AWS_REGION }}
 
-    - name: Upload JAR and scripts to S3
+    - name: Prepare deployment package
       run: |
-        aws s3 cp ./build/libs/gbpark.jar s3://${{ env.S3_BUCKET_NAME }}/gbpark.jar
-        aws s3 cp ./scripts s3://${{ env.S3_BUCKET_NAME }}/scripts --recursive
-        echo '{"files":[{"source":"gbpark.jar","destination":"/home/ec2-user/app"},{"source":"scripts","destination":"/home/ec2-user/app/scripts"}]}' > appspec.json
-        aws s3 cp appspec.json s3://${{ env.S3_BUCKET_NAME }}/appspec.json
+        mkdir -p deployment_package
+        cp ./build/libs/gbpark.jar deployment_package/
+        cp -R ./scripts deployment_package/
+        cp appspec.yml deployment_package/
+        cd deployment_package
+        zip -r ../deploy.zip .
+        cd ..
+
+    - name: Upload to S3
+      run: aws s3 cp deploy.zip s3://${{ env.S3_BUCKET_NAME }}/deploy.zip
 
     - name: Deploy to EC2 via CodeDeploy
       run: |
         aws deploy create-deployment \
           --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
           --deployment-group-name ${{ env.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }} \
-          --s3-location bucket=${{ env.S3_BUCKET_NAME }},key=appspec.json,bundleType=JSON
+          --s3-location bucket=${{ env.S3_BUCKET_NAME }},key=deploy.zip,bundleType=zip

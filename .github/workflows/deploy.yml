@@ -7,9 +7,9 @@ on:
         
 env:
   AWS_REGION: ap-northeast-2
-  S3_BUCKET_NAME: my-app-deploy-bucket
-  CODE_DEPLOY_APPLICATION_NAME: my-spring-vue-app
-  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: my-app-deployment-group
+  S3_BUCKET_NAME: gbp-bucket
+  CODE_DEPLOY_APPLICATION_NAME: gbpark
+  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: gbparkDeployGroup
 
 jobs:
   build:

@@ -4,6 +4,12 @@ on:
   push:
     branches:
       - deploy
+        
+env:
+  AWS_REGION: ap-northeast-2
+  S3_BUCKET_NAME: my-app-deploy-bucket
+  CODE_DEPLOY_APPLICATION_NAME: my-spring-vue-app
+  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: my-app-deployment-group
 
 jobs:
   build:
@@ -43,23 +49,23 @@ jobs:
         chmod +x ./gradlew
         ./gradlew build -x test
 
-    - name: Deploy to EC2
-      env:
-        PRIVATE_KEY: ${{ secrets.GBPARK_KEY }}
-        DEPLOY_IP: ${{ secrets.GBPARK_HOST }}
-      run: |
-        echo "$PRIVATE_KEY" > private_key.pem
-        chmod 400 private_key.pem
-        scp -i private_key.pem -o StrictHostKeyChecking=no ./build/libs/gbpark.jar ec2-user@"$DEPLOY_IP":/home/ec2-user/gbpark.jar
-        ssh -i private_key.pem -o StrictHostKeyChecking=no ec2-user@"$DEPLOY_IP" << 'EOF'
-          # 스프링 부트 애플리케이션 재시작
-          sudo pkill -f 'java -jar' || true
-          while pgrep -f 'java -jar' > /dev/null; do
-            echo "Waiting for Java process to terminate..."
-            sleep 2
-          done
-          sudo -E nohup java -jar /home/ec2-user/gbpark.jar > /home/ec2-user/app.log 2>&1 &
-        EOF
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.GBPARK_ACC_KEY }}
+        aws-secret-access-key: ${{ secrets.GBPARK_ACC_SEC_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
 
-    - name: Clean up
-      run: rm private_key.pem
+    - name: Upload JAR and scripts to S3
+      run: |
+        aws s3 cp ./build/libs/gbpark.jar s3://${{ env.S3_BUCKET_NAME }}/gbpark.jar
+        aws s3 cp ./scripts s3://${{ env.S3_BUCKET_NAME }}/scripts --recursive
+        echo '{"files":[{"source":"gbpark.jar","destination":"/home/ec2-user/app"},{"source":"scripts","destination":"/home/ec2-user/app/scripts"}]}' > appspec.json
+        aws s3 cp appspec.json s3://${{ env.S3_BUCKET_NAME }}/appspec.json
+
+    - name: Deploy to EC2 via CodeDeploy
+      run: |
+        aws deploy create-deployment \
+          --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
+          --deployment-group-name ${{ env.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }} \
+          --s3-location bucket=${{ env.S3_BUCKET_NAME }},key=appspec.json,bundleType=JSON

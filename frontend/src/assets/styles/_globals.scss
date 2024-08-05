@@ -15,6 +15,10 @@ img {
   display: flex;
   justify-content: center;
   align-items: center;
+  &-col {
+    @extend .flex-center;
+    flex-direction: column;
+  }
 }
 
 .ff {

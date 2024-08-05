@@ -62,6 +62,7 @@ jobs:
         cp ./build/libs/gbpark.jar deployment_package/
         cp -R ./scripts deployment_package/
         cp appspec.yml deployment_package/
+        chmod +x -R deployment_package
         cd deployment_package
         zip -r ../deploy.zip .
         cd ..

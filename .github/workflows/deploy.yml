@@ -4,6 +4,12 @@ on:
   push:
     branches:
       - deploy
+        
+env:
+  AWS_REGION: ap-northeast-2
+  S3_BUCKET_NAME: gbp-bucket
+  CODE_DEPLOY_APPLICATION_NAME: gbpark
+  CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: gbparkDeployGroup
 
 jobs:
   build:
@@ -43,23 +49,30 @@ jobs:
         chmod +x ./gradlew
         ./gradlew build -x test
 
-    - name: Deploy to EC2
-      env:
-        PRIVATE_KEY: ${{ secrets.GBPARK_KEY }}
-        DEPLOY_IP: ${{ secrets.GBPARK_HOST }}
-      run: |
-        echo "$PRIVATE_KEY" > private_key.pem
-        chmod 400 private_key.pem
-        scp -i private_key.pem -o StrictHostKeyChecking=no ./build/libs/gbpark.jar ec2-user@"$DEPLOY_IP":/home/ec2-user/gbpark.jar
-        ssh -i private_key.pem -o StrictHostKeyChecking=no ec2-user@"$DEPLOY_IP" << 'EOF'
-          # 스프링 부트 애플리케이션 재시작
-          sudo pkill -f 'java -jar' || true
-          while pgrep -f 'java -jar' > /dev/null; do
-            echo "Waiting for Java process to terminate..."
-            sleep 2
-          done
-          sudo -E nohup java -jar /home/ec2-user/gbpark.jar > /home/ec2-user/app.log 2>&1 &
-        EOF
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.GBPARK_ACC_KEY }}
+        aws-secret-access-key: ${{ secrets.GBPARK_ACC_SEC_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
 
-    - name: Clean up
-      run: rm private_key.pem
+    - name: Prepare deployment package
+      run: |
+        mkdir -p deployment_package
+        cp ./build/libs/gbpark.jar deployment_package/
+        cp -R ./scripts deployment_package/
+        cp appspec.yml deployment_package/
+        chmod +x -R deployment_package
+        cd deployment_package
+        zip -r ../deploy.zip .
+        cd ..
+
+    - name: Upload to S3
+      run: aws s3 cp deploy.zip s3://${{ env.S3_BUCKET_NAME }}/deploy.zip
+
+    - name: Deploy to EC2 via CodeDeploy
+      run: |
+        aws deploy create-deployment \
+          --application-name ${{ env.CODE_DEPLOY_APPLICATION_NAME }} \
+          --deployment-group-name ${{ env.CODE_DEPLOY_DEPLOYMENT_GROUP_NAME }} \
+          --s3-location bucket=${{ env.S3_BUCKET_NAME }},key=deploy.zip,bundleType=zip

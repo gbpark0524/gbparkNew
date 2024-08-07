@@ -5,7 +5,6 @@ import ke.pe.gbpark.domain.GuestBook;
 import ke.pe.gbpark.repository.GuestBookRepository;
 import ke.pe.gbpark.request.GuestBookCreate;
 import ke.pe.gbpark.request.GuestBookSearch;
-import ke.pe.gbpark.request.PageSearch;
 import ke.pe.gbpark.response.GuestBookResponse;
 import ke.pe.gbpark.response.PaginationResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,27 +38,41 @@ class GuestBookServiceTest {
     @DisplayName("GuestBookService write test")
     void writeTest() {
         // given
-        GuestBookCreate guestBookCreate = GuestBookCreate.builder("title")
-                .writer("writer")
-                .password("password")
-                .content("content")
-                .email("email")
-                .ip("ip")
+        final String testTitle = "Test Title";
+        final String testWriter = "Test Writer";
+        final String testPass = "testPass";
+        final String testContent = "Test Content";
+        final String testMail = "test@email.com";
+        final String testIp = "127.0.0.1";
+        GuestBookCreate guestBookCreate = GuestBookCreate.builder(testTitle)
+                .writer(testWriter)
+                .password(testPass)
+                .content(testContent)
+                .email(testMail)
+                .ip(testIp)
                 .build();
 
         // when
         guestBookService.write(guestBookCreate);
 
         // then
-        assertEquals(1L, guestBookRepository.count());
+        List<GuestBook> savedGuestBooks = guestBookRepository.findAll();
+        assertEquals(1, savedGuestBooks.size());
+
+        GuestBook savedGuestBook = savedGuestBooks.get(0);
+        assertEquals(testTitle, savedGuestBook.getTitle());
+        assertEquals(testWriter, savedGuestBook.getWriter());
+        assertEquals(testContent, savedGuestBook.getContent());
+        assertEquals(testMail, savedGuestBook.getEmail());
+        assertEquals(testIp, savedGuestBook.getIp());
+        assertFalse(savedGuestBook.isSecret());
     }
 
     @Test
     @DisplayName("GuestBookService get one test")
     void get() {
         // given
-        GuestBook guestBook = GuestBook.builder()
-                .title("title")
+        GuestBook guestBook = GuestBook.builder("title")
                 .content("con")
                 .writer("me")
                 .password("pass")
@@ -84,8 +97,7 @@ class GuestBookServiceTest {
     void getList() {
         // given
         List<GuestBook> guestBooks = IntStream.range(0, 20)
-                .mapToObj(i -> GuestBook.builder()
-                        .title("foo" + i)
+                .mapToObj(i -> GuestBook.builder("foo" + i)
                         .content("bar1" + i)
                         .build())
                 .collect(Collectors.toList());
@@ -109,8 +121,7 @@ class GuestBookServiceTest {
     void getListWithDefault() {
         // given
         List<GuestBook> guestBooks = IntStream.range(0, 20)
-                .mapToObj(i -> GuestBook.builder()
-                        .title("foo" + i)
+                .mapToObj(i -> GuestBook.builder("foo" + i)
                         .content("bar1" + i)
                         .build())
                 .collect(Collectors.toList());

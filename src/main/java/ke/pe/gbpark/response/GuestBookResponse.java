@@ -1,12 +1,15 @@
 package ke.pe.gbpark.response;
 
 import ke.pe.gbpark.domain.GuestBook;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.format.DateTimeFormatter;
 
 @Getter
+@Builder
+@AllArgsConstructor
 public class GuestBookResponse {
     private final Long id;
     private final String title;
@@ -25,12 +28,7 @@ public class GuestBookResponse {
     }
 
     @Builder
-    public GuestBookResponse(Long id, String title, String content, String writer, String date, boolean secret) {
-        this.id = id;
-        this.title = title;
-        this.content = content;
-        this.writer = writer;
-        this.date = date;
-        this.secret = secret;
+    public static GuestBookResponseBuilder builder(String title) {
+        return new GuestBookResponseBuilder().title(title);
     }
 }

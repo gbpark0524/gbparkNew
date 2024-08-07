@@ -11,10 +11,8 @@ import jakarta.persistence.Lob;
 import ke.pe.gbpark.util.entity.BaseTimeEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -28,5 +26,11 @@ public class Board extends BaseTimeEntity {
     private boolean secret;
 
     @Lob
-    private String content;
+    private  String content;
+
+    protected Board(String title, String content, boolean secret) {
+        this.title = title;
+        this.content = content;
+        this.secret = secret;
+    }
 }

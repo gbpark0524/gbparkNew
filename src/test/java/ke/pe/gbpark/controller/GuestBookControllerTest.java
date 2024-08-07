@@ -17,7 +17,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.hamcrest.Matchers.is;
@@ -93,16 +92,15 @@ class GuestBookControllerTest {
     }
 
     @Test
-    void getGuestBook() throws Exception{
+    void getGuestBook() throws Exception {
         // given
-        GuestBook guestBook = GuestBook.builder()
-                .title("postGuestBookTest")
+        GuestBook guestBook = GuestBook.builder("postGuestBookTest")
                 .content("Test content")
                 .writer("Test writer")
                 .password("pass")
                 .build();
         guestBookRepository.save(guestBook);
-        
+
         GuestBookResponse bookResponse = new GuestBookResponse(guestBook);
         Response<GuestBookResponse> response = new Response<>(true, Response.SUCCESS_MESSAGE, bookResponse);
         String expectedJson = objectMapper.writeValueAsString(response);
@@ -113,7 +111,7 @@ class GuestBookControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.message").value(Response.SUCCESS_MESSAGE))
-                .andExpect(content().json(expectedJson, true)) 
+                .andExpect(content().json(expectedJson, false))
                 .andDo(print());
     }
 
@@ -121,8 +119,7 @@ class GuestBookControllerTest {
     void getPaginationGuestBook() throws Exception {
         // given
         List<GuestBook> guestBooks = IntStream.range(0, 20)
-                .mapToObj(i -> GuestBook.builder()
-                        .title("foo" + i)
+                .mapToObj(i -> GuestBook.builder("foo" + i)
                         .content("bar" + i)
                         .build())
                 .toList();

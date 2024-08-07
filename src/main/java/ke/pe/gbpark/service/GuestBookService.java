@@ -28,6 +28,7 @@ public class GuestBookService {
                         .password(guestBookCreate.getPassword())
                         .email(guestBookCreate.getEmail())
                         .ip(guestBookCreate.getIp())
+                        .secret(guestBookCreate.isSecret())
                         .build();
 
         guestBookRepository.save(guestBook);
@@ -39,6 +40,7 @@ public class GuestBookService {
                         .id(id)
                         .title(guestBook.getTitle())
                         .content(guestBook.getContent())
+                        .writer(guestBook.getWriter())
                         .writer(guestBook.getWriter())
                         .build());
     }

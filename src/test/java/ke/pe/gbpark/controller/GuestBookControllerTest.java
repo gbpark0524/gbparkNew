@@ -50,8 +50,7 @@ class GuestBookControllerTest {
     @DisplayName("/guestbook insert test")
     void postGuestBook() throws Exception {
         // given
-        GuestBookCreate guestBookCreate = GuestBookCreate.builder()
-                .title("postGuestBookTest")
+        GuestBookCreate guestBookCreate = GuestBookCreate.builder("postGuestBookTest")
                 .writer("gbpark")
                 .password("pass")
                 .content("postGuestBookTestContent")
@@ -73,8 +72,7 @@ class GuestBookControllerTest {
     @DisplayName("/guestbook validation test")
     void postGuestBookValidTitleTest() throws Exception {
         // given
-        GuestBookCreate guestBookCreate = GuestBookCreate.builder()
-                .title("")
+        GuestBookCreate guestBookCreate = GuestBookCreate.builder("")
                 .writer("gbpark")
                 .password("pass")
                 .content("postGuestBookTestContent")

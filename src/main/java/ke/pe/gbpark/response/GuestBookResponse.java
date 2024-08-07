@@ -13,6 +13,7 @@ public class GuestBookResponse {
     private final String content;
     private final String writer;
     private final String date;
+    private final boolean secret;
 
     public GuestBookResponse(GuestBook guestBook) {
         this.id = guestBook.getId();
@@ -20,14 +21,16 @@ public class GuestBookResponse {
         this.content = guestBook.getContent();
         this.writer = guestBook.getWriter();
         this.date = guestBook.getLastModifiedDate().format(DateTimeFormatter.ISO_DATE_TIME);
+        this.secret = guestBook.isSecret();
     }
 
     @Builder
-    public GuestBookResponse(Long id, String title, String content, String writer, String date) {
+    public GuestBookResponse(Long id, String title, String content, String writer, String date, boolean secret) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.writer = writer;
         this.date = date;
+        this.secret = secret;
     }
 }

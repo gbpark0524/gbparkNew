@@ -25,6 +25,7 @@ public class Board extends BaseTimeEntity {
     private Long id;
 
     private String title;
+    private boolean secret;
 
     @Lob
     private String content;

@@ -39,8 +39,7 @@ class GuestBookServiceTest {
     @DisplayName("GuestBookService write test")
     void writeTest() {
         // given
-        GuestBookCreate guestBookCreate = GuestBookCreate.builder()
-                .title("title")
+        GuestBookCreate guestBookCreate = GuestBookCreate.builder("title")
                 .writer("writer")
                 .password("password")
                 .content("content")

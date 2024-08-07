@@ -16,21 +16,14 @@ public class GuestBook extends Board {
     private String ip;
 
     @Builder
-    public GuestBook(String title, String content, String writer, String password, String email, String ip) {
+    public GuestBook(String title, String content, String writer, String password, String email, String ip, boolean secret) {
         setTitle(title);
         setContent(content);
+        setSecret(secret);
         this.writer = writer;
         this.password = password;
         this.email = email;
         this.ip = ip;
     }
 
-    public void edit(GuestBookEditor guestBookEditor) {
-        setTitle(guestBookEditor.getTitle());
-        setContent(guestBookEditor.getContent());
-        writer = guestBookEditor.getWriter();
-        password = guestBookEditor.getPassword();
-        email = guestBookEditor.getEmail();
-        ip = guestBookEditor.getIp();
-    }
 }

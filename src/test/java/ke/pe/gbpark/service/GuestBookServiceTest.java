@@ -18,6 +18,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -95,25 +96,37 @@ class GuestBookServiceTest {
     @Test
     @DisplayName("GuestBookService get list test")
     void getList() {
-        // given
-        List<GuestBook> guestBooks = IntStream.range(0, 20)
-                .mapToObj(i -> GuestBook.builder("foo" + i)
-                        .content("bar1" + i)
-                        .build())
-                .collect(Collectors.toList());
-
+        // Given
+        int totalGuestBooks = 20;
+        int pageSize = 10;
+        int pageNumber = 1;
+        String[] titles = IntStream.range(0, totalGuestBooks)
+                .mapToObj(i -> "foo" + i)
+                .toArray(String[]::new);
+        List<GuestBook> guestBooks = createGuestBooks(titles);
         guestBookRepository.saveAll(guestBooks);
 
-        GuestBookSearch guestBookSearch = GuestBookSearch.builder()
-                .page(1)
+        GuestBookSearch search = GuestBookSearch.builder()
+                .page(pageNumber)
                 .build();
 
-        // when
-        PaginationResponse<GuestBookResponse> guestBookResponsePaginationResponse = guestBookService.getList(guestBookSearch);
+        // When
+        PaginationResponse<GuestBookResponse> response = guestBookService.getList(search);
 
-        // then
-        assertEquals(10L, guestBookResponsePaginationResponse.getItems().size());
-        assertEquals("foo19", guestBookResponsePaginationResponse.getItems().get(0).getTitle());
+        // Then
+        assertThat(response.getSize()).isEqualTo(pageSize);
+        assertThat(response.getItems().get(0).getTitle()).isEqualTo("foo19");
+        assertThat(response.getTotalPage()).isEqualTo(2);
+        assertThat(response.getTotalCount()).isEqualTo(totalGuestBooks);
+        assertThat(response.getPage()).isEqualTo(pageNumber);
+    }
+
+    private List<GuestBook> createGuestBooks(String[] titles) {
+        return IntStream.range(0, titles.length)
+                .mapToObj(i -> GuestBook.builder(titles[i])
+                        .content("bar" + i)
+                        .build())
+                .collect(Collectors.toList());
     }
 
     @Test

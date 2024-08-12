@@ -3,7 +3,7 @@ package ke.pe.gbpark.domain;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
-public record GitHubContributionVo(@JsonProperty("data") Data data) {
+public record GithubContributionVo(@JsonProperty("data") Data data) {
 
     public record Data(@JsonProperty("user") User user) {}
 

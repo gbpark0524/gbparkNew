@@ -1,40 +1,55 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-const GithubCommit3x3GridAnimation = () => {
-    const [cells, setCells] = useState<Array<{ commits: number, delay: number }>>([]);
+interface GithubResponse {
+    date: string;
+    commitCount: number;
+    color: string;
+}
 
-    const generateMockData = () => {
-        return Array.from({ length: 9 }, () => ({
-            commits: Math.floor(Math.random() * 5),
-            delay: Math.random() * 2 // Random delay between 0 and 2 seconds
-        }));
-    };
+interface Cell {
+    commits: number;
+    delay: number;
+    color: string;
+}
+
+const GithubCommit4x4GridAnimation: React.FC = () => {
+    const [cells, setCells] = useState<Cell[]>([]);
 
     useEffect(() => {
-        setCells(generateMockData());
-    }, []);
+        const fetchData = async () => {
+            try {
+                const response = await axios.get<GithubResponse[]>('/portlet/github/contributions');
+                const recentData = response.data.slice(-16); // 최근 16일의 데이터
+                const cellData: Cell[] = recentData.map(day => ({
+                    commits: day.commitCount,
+                    delay: Math.random() * 2, // Random delay between 0 and 2 seconds
+                    color: day.color
+                }));
+                setCells(cellData);
+            } catch (error) {
+                console.error('Error fetching GitHub data:', error);
+                // 에러 시 빈 셀로 채움
+                setCells(Array(16).fill({ commits: 0, delay: 0, color: '#ebedf0' }));
+            }
+        };
 
-    const getColor = (commits: number): string => {
-        if (commits === 0) return '#ebedf0';
-        if (commits === 1) return '#9be9a8';
-        if (commits === 2) return '#40c463';
-        if (commits === 3) return '#30a14e';
-        return '#216e39';
-    };
+        fetchData();
+    }, []);
 
     return (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '75%', width: '75%' }}>
             <div style={{
                 position: 'relative',
-                width: '300px',
-                height: '300px',
+                width: '400px',
+                height: '400px',
                 transform: 'rotateX(60deg) rotateZ(-45deg)',
                 transformStyle: 'preserve-3d',
             }}>
                 <div
                     style={{
                         display: 'grid',
-                        gridTemplateColumns: 'repeat(3, 1fr)',
+                        gridTemplateColumns: 'repeat(4, 1fr)',
                         gap: '4px',
                         width: '100%',
                         height: '100%',
@@ -47,12 +62,12 @@ const GithubCommit3x3GridAnimation = () => {
                     {cells.map((cell, index) => (
                         <div
                             key={index}
+                            data-commits={cell.commits}
                             style={{
-                                backgroundColor: getColor(cell.commits),
+                                backgroundColor: cell.color,
                                 borderRadius: '4px',
-                                animation: cell.commits > 0 ? `fallDown 1s ease-in-out ${cell.delay}s` : 'none',
+                                animation: cell.commits > 0 ? `fallDown 1s ease-in-out ${cell.delay}s forwards` : 'none',
                                 opacity: cell.commits > 0 ? 0 : 1,
-                                animationFillMode: 'forwards',
                             }}
                         />
                     ))}
@@ -83,4 +98,4 @@ const GithubCommit3x3GridAnimation = () => {
     );
 };
 
-export default GithubCommit3x3GridAnimation;
+export default GithubCommit4x4GridAnimation;

@@ -38,3 +38,6 @@ spring:
     resources:
       static-locations: classpath:/static/
 
+external-api:
+  github:
+    token: ${GITHUB_API_TOKEN}

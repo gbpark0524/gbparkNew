@@ -5,7 +5,6 @@ import ke.pe.gbpark.domain.GuestBook;
 import ke.pe.gbpark.repository.GuestBookRepository;
 import ke.pe.gbpark.request.GuestBookCreate;
 import ke.pe.gbpark.request.GuestBookSearch;
-import ke.pe.gbpark.request.PageSearch;
 import ke.pe.gbpark.response.GuestBookResponse;
 import ke.pe.gbpark.response.PaginationResponse;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +18,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -39,28 +39,41 @@ class GuestBookServiceTest {
     @DisplayName("GuestBookService write test")
     void writeTest() {
         // given
-        GuestBookCreate guestBookCreate = GuestBookCreate.builder()
-                .title("title")
-                .writer("writer")
-                .password("password")
-                .content("content")
-                .email("email")
-                .ip("ip")
+        final String testTitle = "Test Title";
+        final String testWriter = "Test Writer";
+        final String testPass = "testPass";
+        final String testContent = "Test Content";
+        final String testMail = "test@email.com";
+        final String testIp = "127.0.0.1";
+        GuestBookCreate guestBookCreate = GuestBookCreate.builder(testTitle)
+                .writer(testWriter)
+                .password(testPass)
+                .content(testContent)
+                .email(testMail)
+                .ip(testIp)
                 .build();
 
         // when
         guestBookService.write(guestBookCreate);
 
         // then
-        assertEquals(1L, guestBookRepository.count());
+        List<GuestBook> savedGuestBooks = guestBookRepository.findAll();
+        assertEquals(1, savedGuestBooks.size());
+
+        GuestBook savedGuestBook = savedGuestBooks.get(0);
+        assertEquals(testTitle, savedGuestBook.getTitle());
+        assertEquals(testWriter, savedGuestBook.getWriter());
+        assertEquals(testContent, savedGuestBook.getContent());
+        assertEquals(testMail, savedGuestBook.getEmail());
+        assertEquals(testIp, savedGuestBook.getIp());
+        assertFalse(savedGuestBook.isSecret());
     }
 
     @Test
     @DisplayName("GuestBookService get one test")
     void get() {
         // given
-        GuestBook guestBook = GuestBook.builder()
-                .title("title")
+        GuestBook guestBook = GuestBook.builder("title")
                 .content("con")
                 .writer("me")
                 .password("pass")
@@ -83,26 +96,37 @@ class GuestBookServiceTest {
     @Test
     @DisplayName("GuestBookService get list test")
     void getList() {
-        // given
-        List<GuestBook> guestBooks = IntStream.range(0, 20)
-                .mapToObj(i -> GuestBook.builder()
-                        .title("foo" + i)
-                        .content("bar1" + i)
-                        .build())
-                .collect(Collectors.toList());
-
+        // Given
+        int totalGuestBooks = 20;
+        int pageSize = 10;
+        int pageNumber = 1;
+        String[] titles = IntStream.range(0, totalGuestBooks)
+                .mapToObj(i -> "foo" + i)
+                .toArray(String[]::new);
+        List<GuestBook> guestBooks = createGuestBooks(titles);
         guestBookRepository.saveAll(guestBooks);
 
-        GuestBookSearch guestBookSearch = GuestBookSearch.builder()
-                .page(1)
+        GuestBookSearch search = GuestBookSearch.builder()
+                .page(pageNumber)
                 .build();
 
-        // when
-        PaginationResponse<GuestBookResponse> guestBookResponsePaginationResponse = guestBookService.getList(guestBookSearch);
+        // When
+        PaginationResponse<GuestBookResponse> response = guestBookService.getList(search);
 
-        // then
-        assertEquals(10L, guestBookResponsePaginationResponse.getItems().size());
-        assertEquals("foo19", guestBookResponsePaginationResponse.getItems().get(0).getTitle());
+        // Then
+        assertThat(response.getSize()).isEqualTo(pageSize);
+        assertThat(response.getItems().get(0).getTitle()).isEqualTo("foo19");
+        assertThat(response.getTotalPage()).isEqualTo(2);
+        assertThat(response.getTotalCount()).isEqualTo(totalGuestBooks);
+        assertThat(response.getPage()).isEqualTo(pageNumber);
+    }
+
+    private List<GuestBook> createGuestBooks(String[] titles) {
+        return IntStream.range(0, titles.length)
+                .mapToObj(i -> GuestBook.builder(titles[i])
+                        .content("bar" + i)
+                        .build())
+                .collect(Collectors.toList());
     }
 
     @Test
@@ -110,8 +134,7 @@ class GuestBookServiceTest {
     void getListWithDefault() {
         // given
         List<GuestBook> guestBooks = IntStream.range(0, 20)
-                .mapToObj(i -> GuestBook.builder()
-                        .title("foo" + i)
+                .mapToObj(i -> GuestBook.builder("foo" + i)
                         .content("bar1" + i)
                         .build())
                 .collect(Collectors.toList());

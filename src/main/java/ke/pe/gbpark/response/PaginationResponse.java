@@ -9,6 +9,7 @@ import java.util.List;
 public class PaginationResponse<T> {
 
     private final long page;
+    private final long totalPage;
     private final long size;
     private final long totalCount;
     private final List<T> items;
@@ -17,6 +18,7 @@ public class PaginationResponse<T> {
         this.page = page.getNumber() + 1;
         this.size = page.getSize();
         this.totalCount = page.getTotalElements();
+        this.totalPage = page.getTotalPages();
         this.items = page.getContent().stream()
                 .map(content -> {
                     try {

@@ -7,6 +7,7 @@ import NotionPortlet from "./portlet/NotionPortlet";
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 import devImg from '../assets/image/dev-gbpark.webp';
+import GithubCommit2DGridVisualization from "./portlet/GithubCommit2DGridVisualization";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -40,9 +41,10 @@ const DraggableGrid = () => {
             <Paper key="a" style={{ padding: 16 }}>
                 <NotionPortlet pages={pages}/>
             </Paper>
-            <Paper key="b" style={{ padding: 16 }}>
+            <Paper key="b" style={{ padding: 16, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 {/*<YouTubePortlet/>*/}
-                <img src={devImg} alt="Developer portrayed in dots"/>
+                {/*<img src={devImg} alt="Developer portrayed in dots"/>*/}
+                <GithubCommit2DGridVisualization/>
             </Paper>
             <Paper key="c" style={{ padding: 16 }}>
                 <GitHubPortlet/>

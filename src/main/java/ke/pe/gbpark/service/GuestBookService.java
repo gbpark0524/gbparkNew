@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 @Slf4j
@@ -21,13 +22,13 @@ public class GuestBookService {
 
     public void write(GuestBookCreate guestBookCreate) {
         GuestBook guestBook =
-                GuestBook.builder()
-                        .title(guestBookCreate.getTitle())
+                GuestBook.builder(guestBookCreate.getTitle())
                         .content(guestBookCreate.getContent())
                         .writer(guestBookCreate.getWriter())
                         .password(guestBookCreate.getPassword())
                         .email(guestBookCreate.getEmail())
                         .ip(guestBookCreate.getIp())
+                        .secret(guestBookCreate.isSecret())
                         .build();
 
         guestBookRepository.save(guestBook);
@@ -35,11 +36,11 @@ public class GuestBookService {
 
     public Optional<GuestBookResponse> get(Long id) {
         return guestBookRepository.findById(id)
-                .map(guestBook -> GuestBookResponse.builder()
+                .map(guestBook -> GuestBookResponse.builder(guestBook.getTitle())
                         .id(id)
-                        .title(guestBook.getTitle())
                         .content(guestBook.getContent())
                         .writer(guestBook.getWriter())
+                        .date(guestBook.getLastModifiedDate().format(DateTimeFormatter.ISO_DATE_TIME))
                         .build());
     }
 

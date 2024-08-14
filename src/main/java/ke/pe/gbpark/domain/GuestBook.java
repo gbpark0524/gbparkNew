@@ -16,21 +16,66 @@ public class GuestBook extends Board {
     private String ip;
 
     @Builder
-    public GuestBook(String title, String content, String writer, String password, String email, String ip) {
-        setTitle(title);
-        setContent(content);
+    private GuestBook(String title, String content, boolean secret, String writer, String password, String email, String ip) {
+        super(title, content, secret);
         this.writer = writer;
         this.password = password;
         this.email = email;
         this.ip = ip;
     }
 
-    public void edit(GuestBookEditor guestBookEditor) {
-        setTitle(guestBookEditor.getTitle());
-        setContent(guestBookEditor.getContent());
-        writer = guestBookEditor.getWriter();
-        password = guestBookEditor.getPassword();
-        email = guestBookEditor.getEmail();
-        ip = guestBookEditor.getIp();
+    public static GuestBookBuilder builder(String title) {
+        return new GuestBookBuilder().title(title);
+    }
+
+    public static class GuestBookBuilder {
+        private String title;
+        private String content;
+        private boolean secret = false;
+        private String writer;
+        private String password;
+        private String email;
+        private String ip;
+
+        GuestBookBuilder() {}
+
+        private GuestBookBuilder title(String title) {
+            this.title = title;
+            return this;
+        }
+
+        public GuestBookBuilder content(String content) {
+            this.content = content;
+            return this;
+        }
+
+        public GuestBookBuilder secret(boolean secret) {
+            this.secret = secret;
+            return this;
+        }
+
+        public GuestBookBuilder writer(String writer) {
+            this.writer = writer;
+            return this;
+        }
+
+        public GuestBookBuilder password(String password) {
+            this.password = password;
+            return this;
+        }
+
+        public GuestBookBuilder email(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public GuestBookBuilder ip(String ip) {
+            this.ip = ip;
+            return this;
+        }
+
+        public GuestBook build() {
+            return new GuestBook(title, content, secret, writer, password, email, ip);
+        }
     }
 }

@@ -3,7 +3,6 @@ import { Responsive, WidthProvider } from 'react-grid-layout';
 import { Paper} from '@mui/material';
 import GitHubPortlet from "./portlet/GitHubPortlet";
 import NotionPortlet from "./portlet/NotionPortlet";
-// import YouTubePortlet from "./portlet/YouTubePortlet";
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 import devImg from '../assets/image/dev-gbpark.webp';
@@ -42,8 +41,6 @@ const DraggableGrid = () => {
                 <NotionPortlet pages={pages}/>
             </Paper>
             <Paper key="b" style={{ padding: 16, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                {/*<YouTubePortlet/>*/}
-                {/*<img src={devImg} alt="Developer portrayed in dots"/>*/}
                 <GithubCommit2DGridVisualization/>
             </Paper>
             <Paper key="c" style={{ padding: 16 }}>

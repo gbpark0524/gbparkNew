@@ -5,7 +5,7 @@ import GitHubPortlet from "./portlet/GitHubPortlet";
 import NotionPortlet from "./portlet/NotionPortlet";
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
-import GithubCommit2DGridVisualization from "./portlet/GithubCommit2DGridVisualization";
+import GithubContributionPortlet from "./portlet/GithubContributionPortlet";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -40,7 +40,7 @@ const DraggableGrid = () => {
                 <NotionPortlet pages={pages}/>
             </Paper>
             <Paper key="b" style={{ padding: 16, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <GithubCommit2DGridVisualization/>
+                <GithubContributionPortlet/>
             </Paper>
             <Paper key="c" style={{ padding: 16 }}>
                 <GitHubPortlet/>

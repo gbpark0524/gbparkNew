@@ -12,12 +12,10 @@ img {
 }
 
 .flex-center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  @include flexCenter(true);
+
   &-col {
-    @extend .flex-center;
-    flex-direction: column;
+    @include flexCenter(false);
   }
 }
 

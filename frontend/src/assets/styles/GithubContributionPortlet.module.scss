@@ -22,14 +22,14 @@
   align-items: center;
   height: 75%;
   width: 75%;
-  
+
   .plate-grid {
     position: relative;
     width: 400px;
     height: 400px;
     transform: rotateX(60deg) rotateZ(-45deg);
-    transform-style: preserve-3d;
-    
+    cursor: pointer;
+
     .area-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);

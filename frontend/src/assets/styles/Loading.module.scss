@@ -126,5 +126,7 @@ html {
 }
 
 .loading {
+  @include full;
+  @include flexCenter(true);
   min-height: 18vh;
 }

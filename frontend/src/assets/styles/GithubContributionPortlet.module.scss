@@ -17,9 +17,7 @@
 }
 
 .content {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  @include flexCenter(true);
   height: 75%;
   width: 75%;
 
@@ -27,7 +25,7 @@
     position: relative;
     width: 400px;
     height: 400px;
-    transform: rotateX(60deg) rotateZ(-45deg);
+    transform: rotateX(60deg) rotateZ(345deg);
     cursor: pointer;
 
     .area-grid {

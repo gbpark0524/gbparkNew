@@ -30,7 +30,7 @@ public class GithubService {
     }
 
     public Mono<List<GithubResponse>> getContributions() {
-        String fromDate = LocalDate.now(ZoneId.of("Asia/Seoul")).minusMonths(1).atStartOfDay(ZoneId.of("Asia/Seoul")).format(DateTimeFormatter.ISO_INSTANT);
+        String fromDate = LocalDate.now(ZoneId.of("Asia/Seoul")).minusMonths(2).atStartOfDay(ZoneId.of("Asia/Seoul")).format(DateTimeFormatter.ISO_INSTANT);
         String toDate = LocalDate.now(ZoneId.of("Asia/Seoul")).atStartOfDay(ZoneId.of("Asia/Seoul")).format(DateTimeFormatter.ISO_INSTANT);
         String query = String.format("""
                 query {

@@ -11,9 +11,9 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 
 const DraggableGrid = () => {
     const layout = [
-        { i: 'a', x: 0, y: 0, w: 2, h: 7 },
-        { i: 'b', x: 2, y: 0, w: 2, h: 4 },
-        { i: 'c', x: 4, y: 0, w: 2, h: 3 }
+        { i: 'a', x: 0, y: 0, w: 2, h: 3 },
+        { i: 'gitHub', x: 0, y: 2, w: 7, h: 4 },
+        { i: 'c', x: 2, y: 0, w: 2, h: 3 }
     ];
 
     const pages = [
@@ -39,10 +39,10 @@ const DraggableGrid = () => {
             <Paper key="a" style={{ padding: 16 }}>
                 <NotionPortlet pages={pages}/>
             </Paper>
-            <Paper key="b" style={{ padding: 16, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <Paper key="gitHub" className={'flex-center'} style={{ padding: 16, overflow:'hidden'}}>
                 <GithubContributionPortlet/>
             </Paper>
-            <Paper key="c" style={{ padding: 16 }}>
+            <Paper key="c" style={{ padding: 16}}>
                 <GitHubPortlet/>
             </Paper>
         </ResponsiveGridLayout>

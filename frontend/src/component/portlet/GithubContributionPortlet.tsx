@@ -22,7 +22,7 @@ const GithubContributionPortlet: React.FC = () => {
         const fetchData = async () => {
             try {
                 const response = await axios.get<GithubResponse[]>('/portlet/github/contributions');
-                const recentData = response.data.slice(-16); // 최근 16일의 데이터
+                const recentData = response.data.slice(-54); // 최근 16일의 데이터
                 const cellData: Cell[] = recentData.map(day => ({
                     commits: day.commitCount,
                     color: day.color,

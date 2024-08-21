@@ -2,6 +2,8 @@ import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import styles from '../../assets/styles/GithubContributionPortlet.module.scss'
 import Tooltip from "@mui/material/Tooltip";
+import {Avatar, Box, Button, CardActions, CardContent, Link, Typography} from "@mui/material";
+import GitHubIcon from "@mui/icons-material/GitHub";
 
 interface GithubResponse {
     date: string;
@@ -13,6 +15,12 @@ interface Cell {
     commits: number;
     color: string;
     date: string;
+}
+
+const githubInfo = {
+    username: "gbpark0524",
+    avatarUrl: "https://github.com/gbpark0524.png",
+    profileUrl: "https://github.com/gbpark0524",
 }
 
 const GithubContributionPortlet: React.FC = () => {
@@ -44,18 +52,19 @@ const GithubContributionPortlet: React.FC = () => {
             <div className={styles['plate-grid']}>
                 <div className={styles['area-grid']}>
                     {cells.map((cell, index) => (
-                        <Tooltip title={cell.commits.toString() + ' contributions on ' + cell.date } key={index} slotProps={{
-                            popper: {
-                                modifiers: [
-                                    {
-                                        name: 'offset',
-                                        options: {
-                                            offset: [0, -50],
-                                        },
-                                    },
-                                ],
-                            },
-                        }}>
+                        <Tooltip title={cell.commits.toString() + ' contributions on ' + cell.date} key={index}
+                                 slotProps={{
+                                     popper: {
+                                         modifiers: [
+                                             {
+                                                 name: 'offset',
+                                                 options: {
+                                                     offset: [0, -50],
+                                                 },
+                                             },
+                                         ],
+                                     },
+                                 }}>
                             <div
                                 key={index}
                                 data-commits={cell.commits}
@@ -68,6 +77,21 @@ const GithubContributionPortlet: React.FC = () => {
                     ))}
                 </div>
             </div>
+            <CardContent style={{height:'100%'}}>
+                <CardActions style={{height:'100%'}}>
+                    <Button
+                        style={{width:'40px', height:'100%'}}
+                        variant="outlined"
+                        fullWidth
+                        component={Link}
+                        href={githubInfo.profileUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <GitHubIcon></GitHubIcon>
+                    </Button>
+                </CardActions>
+            </CardContent>
         </div>
     );
 };

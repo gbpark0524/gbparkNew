@@ -4,6 +4,8 @@ import ke.pe.gbpark.domain.GithubContributionVo;
 import ke.pe.gbpark.domain.GithubContributionVo.ContributionCalendar;
 import ke.pe.gbpark.response.GithubResponse;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -15,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@CacheConfig()
 public class GithubService {
     private static final String GITHUB_API_URL = "https://api.github.com/graphql";
     private final WebClient webClient;
@@ -29,7 +32,9 @@ public class GithubService {
                 .build();
     }
 
+    @Cacheable(value = "githubContributions", key = "#root.method.name" )
     public Mono<List<GithubResponse>> getContributions() {
+        System.out.println("call getContributions");
         String fromDate = LocalDate.now(ZoneId.of("Asia/Seoul")).minusMonths(2).atStartOfDay(ZoneId.of("Asia/Seoul")).format(DateTimeFormatter.ISO_INSTANT);
         String toDate = LocalDate.now(ZoneId.of("Asia/Seoul")).atStartOfDay(ZoneId.of("Asia/Seoul")).format(DateTimeFormatter.ISO_INSTANT);
         String query = String.format("""
@@ -55,7 +60,8 @@ public class GithubService {
         Mono<GithubContributionVo> voMono = webClient.post()
                 .bodyValue(new GraphQLRequestBody(query))
                 .retrieve()
-                .bodyToMono(GithubContributionVo.class);
+                .bodyToMono(GithubContributionVo.class)
+                .cache();
         return voMono.map(vo -> {
             List<GithubResponse> responses = new ArrayList<>();
             ContributionCalendar calendar = vo.data().user().contributionsCollection().contributionCalendar();

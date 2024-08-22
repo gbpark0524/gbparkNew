@@ -4,7 +4,7 @@ module.exports = {
     style: {
         sass: {
             loaderOptions: {
-                additionalData: `@import "@src/assets/styles/common/_variables.scss"; @import "@src/assets/styles/common/mixins.scss";`,
+                additionalData: `@import "@styles/common/_variables.scss"; @import "@styles/common/mixins.scss";`,
             }
         }
     },

@@ -1,6 +1,6 @@
 import React from 'react';
 import {Box, useTheme} from '@mui/material';
-import styles from '../assets/styles/Loading.module.scss'
+import styles from '@assets/styles/Loading.module.scss'
 import Typography from "@mui/material/Typography";
 
 const Loading = ({fullScreen = true}) => {

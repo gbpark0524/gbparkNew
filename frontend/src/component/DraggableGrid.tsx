@@ -1,11 +1,11 @@
 import React from 'react';
 import {Responsive, WidthProvider} from 'react-grid-layout';
 import {Paper} from '@mui/material';
-import GitHubPortlet from "./portlet/GitHubPortlet";
-import NotionPortlet from "./portlet/NotionPortlet";
+import GitHubPortlet from "@component/portlet/GitHubPortlet";
+import NotionPortlet from "@component/portlet/NotionPortlet";
+import GithubContributionPortlet from "@component/portlet/GithubContributionPortlet";
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
-import GithubContributionPortlet from "./portlet/GithubContributionPortlet";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 

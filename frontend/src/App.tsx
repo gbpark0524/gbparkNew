@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import './assets/styles/App.scss';
-import ResponsiveAppBar from './component/AppBar';
-import Guestbook from './page/Guestbook';
-import Main from './page/Main';
+import '@assets/styles/App.scss';
+import ResponsiveAppBar from '@component/AppBar';
+import Guestbook from '@page/Guestbook';
+import Main from '@page/Main';
 import {Route, Routes} from "react-router";
-import Loading from "./component/Loading";
+import Loading from "@component/Loading";
 
 function App() {
     const [isLoading, setIsLoading] = useState(true);

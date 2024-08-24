@@ -1,6 +1,12 @@
 package ke.pe.gbpark.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import ke.pe.gbpark.domain.NotionQuery;
+import ke.pe.gbpark.domain.NotionQuery.Filter;
+import ke.pe.gbpark.domain.NotionQuery.FilterValue;
+import ke.pe.gbpark.domain.NotionQuery.Sort;
+import ke.pe.gbpark.domain.NotionQuery.SortDirection;
 import okhttp3.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,17 +24,27 @@ public class NotionService {
     private String AUTHORIZATION;
 
     public String getNewNotionList(int pageSize, String next) {
-        final String notionVersion = "2021-05-13";
-        final String index = "- log";
+        final String notionVersion = "2022-06-28";
 
         OkHttpClient client = new OkHttpClient().newBuilder().build();
         MediaType mediaType = MediaType.parse("application/json");
-        String jsonStr = "{\"query\":\"" + index + "\",\"sort\":{\"direction\":\"descending\",\"timestamp\":\"last_edited_time\"},\"filter\":{\"property\":\"object\",\"value\":\"page\"}";
-        jsonStr += pageSize == -1 ? "" : ",\"page_size\":" + pageSize;
-        jsonStr += next == null ? "" : ",\"start_cursor\":\"" + next + "\"";
-        jsonStr += "}";
-        RequestBody body = RequestBody.create(jsonStr, mediaType);
+        NotionQuery query = NotionQuery.builder()
+                .sort(Sort.builder()
+                        .direction(SortDirection.DESC)
+                        .build())
+                .filter(Filter.builder()
+                        .value(FilterValue.PAGE)
+                        .build())
+                .pageSize(10)
+                .build();
         ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = null;
+        try {
+            jsonString = objectMapper.writeValueAsString(query);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("wrong notion query : " + query);
+        }
+        RequestBody body = RequestBody.create(jsonString, mediaType);
 
         Request.Builder builder = new Request.Builder()
                 .url("https://api.notion.com/v1/search")
@@ -37,9 +53,10 @@ public class NotionService {
                 .addHeader("Authorization", AUTHORIZATION)
                 .addHeader("Notion-Version", notionVersion);
 
-        try (Response response = client.newCall(builder.build()).execute()){
+        try (Response response = client.newCall(builder.build()).execute()) {
 
-            if(response.code() != HttpStatus.OK.value()) throw new Exception("Code exception occur, code : " + response.code());
+            if (response.code() != HttpStatus.OK.value())
+                throw new Exception("Code exception occur, code : " + response.code());
 
             return Objects.requireNonNull(response.body()).string();
 

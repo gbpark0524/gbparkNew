@@ -2,6 +2,8 @@ package ke.pe.gbpark.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import ke.pe.gbpark.domain.NotionPageInfo;
+import ke.pe.gbpark.domain.NotionParser;
 import ke.pe.gbpark.domain.NotionQuery;
 import ke.pe.gbpark.domain.NotionQuery.Filter;
 import ke.pe.gbpark.domain.NotionQuery.FilterValue;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -23,7 +26,7 @@ public class NotionService {
     @Value("#{environment['config.notion']}")
     private String AUTHORIZATION;
 
-    public String getNewNotionList(int pageSize, String next) {
+    public String getNewNotionList() {
         final String notionVersion = "2022-06-28";
 
         OkHttpClient client = new OkHttpClient().newBuilder().build();
@@ -35,7 +38,7 @@ public class NotionService {
                 .filter(Filter.builder()
                         .value(FilterValue.PAGE)
                         .build())
-                .pageSize(10)
+                .pageSize(11)
                 .build();
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = null;
@@ -58,7 +61,18 @@ public class NotionService {
             if (response.code() != HttpStatus.OK.value())
                 throw new Exception("Code exception occur, code : " + response.code());
 
-            return Objects.requireNonNull(response.body()).string();
+            ResponseBody responseBody = response.body();
+            String responseString = Objects.requireNonNull(responseBody).string();
+
+            List<NotionPageInfo> pageInfoList = NotionParser.parseResponse(responseString);
+
+            for (NotionPageInfo pageInfo : pageInfoList) {
+                System.out.println("ID: " + pageInfo.id());
+                System.out.println("URL: " + pageInfo.url());
+                System.out.println("Emoji: " + pageInfo.icon().emoji());
+                System.out.println("---");
+            }
+            return Objects.requireNonNull(responseBody).string();
 
         } catch (Exception e) {
             logger.error(e.getMessage());

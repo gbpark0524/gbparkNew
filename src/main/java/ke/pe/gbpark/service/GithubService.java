@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@CacheConfig()
+@CacheConfig
 public class GithubService {
     private static final String GITHUB_API_URL = "https://api.github.com/graphql";
     private final WebClient webClient;

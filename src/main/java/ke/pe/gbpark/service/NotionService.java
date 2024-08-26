@@ -9,26 +9,33 @@ import ke.pe.gbpark.domain.NotionQuery.Filter;
 import ke.pe.gbpark.domain.NotionQuery.FilterValue;
 import ke.pe.gbpark.domain.NotionQuery.Sort;
 import ke.pe.gbpark.domain.NotionQuery.SortDirection;
-import okhttp3.*;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 @Service
+@CacheConfig
 public class NotionService {
     final Logger logger = LoggerFactory.getLogger(NotionService.class);
 
     @Value("#{environment['external-api.notion.token']}")
     private String NOTION_TOKEN;
 
+    @Cacheable(value = "notionPages", key = "#pageSize")
     public List<NotionPageInfo> getNewNotionList(int pageSize) {
         final String notionVersion = "2022-06-28";
 

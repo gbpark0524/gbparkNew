@@ -1,5 +1,7 @@
 package ke.pe.gbpark.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Configuration;
@@ -12,11 +14,13 @@ import javax.management.timer.Timer;
 @EnableScheduling
 @EnableCaching
 public class CacheConfig {
+    final Logger logger = LoggerFactory.getLogger(CacheConfig.class);
+
     @Scheduled(fixedRate = Timer.ONE_HOUR)
     @CacheEvict(
-            value = {"githubContributions"},
+            value = {"githubContributions", "notionPages"},
             allEntries = true)
     public void clearEvents() {
-        System.out.println("clear cache");
+        logger.debug("clear cache");
     }
 }

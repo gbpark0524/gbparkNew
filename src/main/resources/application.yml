@@ -41,3 +41,5 @@ spring:
 external-api:
   github:
     token: ${GITHUB_API_TOKEN}
+  notion:
+    token: ${NOTION_API_TOKEN}

@@ -1,6 +1,8 @@
 package ke.pe.gbpark.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ke.pe.gbpark.domain.NotionPageInfo;
@@ -23,7 +25,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -35,6 +36,8 @@ public class NotionService {
     @Value("#{environment['external-api.notion.token']}")
     private String NOTION_TOKEN;
 
+    private static final ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    
     @Cacheable(value = "notionPages", key = "#pageSize")
     public List<NotionPageInfo> getNewNotionList(int pageSize) {
         final String notionVersion = "2022-06-28";
@@ -50,7 +53,6 @@ public class NotionService {
                         .build())
                 .pageSize(pageSize)
                 .build();
-        ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = null;
         try {
             jsonString = objectMapper.writeValueAsString(query);
@@ -94,30 +96,12 @@ public class NotionService {
     }
 
     private static List<NotionPageInfo> parseResponse(String responseBody) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode rootNode = mapper.readTree(responseBody);
+        JsonNode rootNode = objectMapper.readTree(responseBody);
         JsonNode resultsNode = rootNode.path("results");
 
-        List<NotionPageInfo> pageInfoList = new ArrayList<>();
-
-        for (JsonNode pageNode : resultsNode) {
-            String id = pageNode.path("id").asText();
-            String url = pageNode.path("url").asText();
-
-            JsonNode iconNode = pageNode.path("icon");
-            String iconType = iconNode.path("type").asText();
-
-            NotionPageInfo.Icon icon;
-            if ("emoji".equals(iconType)) {
-                String emoji = iconNode.path("emoji").asText();
-                icon = new NotionPageInfo.Icon(iconType, emoji);
-            } else {
-                icon = new NotionPageInfo.Icon(iconType, null);
-            }
-
-            pageInfoList.add(new NotionPageInfo(id, url, icon));
-        }
-
-        return pageInfoList;
+        return objectMapper.readValue(
+                objectMapper.treeAsTokens(resultsNode),
+                new TypeReference<List<NotionPageInfo>>() {}
+        );
     }
 }

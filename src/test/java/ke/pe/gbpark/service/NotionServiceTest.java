@@ -1,14 +1,11 @@
 package ke.pe.gbpark.service;
 
-import jakarta.transaction.Transactional;
-import ke.pe.gbpark.domain.NotionPageInfo;
+import ke.pe.gbpark.response.NotionResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class NotionServiceTest {
@@ -17,7 +14,7 @@ class NotionServiceTest {
 
     @Test
     void getNewNotionList() {
-        List<NotionPageInfo> newNotionList = notionService.getNewNotionList(11);
+        List<NotionResponse> newNotionList = notionService.getNewNotionList(11);
         System.out.println(newNotionList);
     }
 }

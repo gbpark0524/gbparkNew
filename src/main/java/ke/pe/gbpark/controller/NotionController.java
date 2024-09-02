@@ -1,6 +1,7 @@
 package ke.pe.gbpark.controller;
 
 import ke.pe.gbpark.domain.NotionPageInfo;
+import ke.pe.gbpark.response.NotionResponse;
 import ke.pe.gbpark.service.NotionService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +21,7 @@ public class NotionController {
 
 
     @GetMapping("/list/{size}")
-    public List<NotionPageInfo> getNewNotionList(@PathVariable int size) {
+    public List<NotionResponse> getNewNotionList(@PathVariable int size) {
         return notionService.getNewNotionList(size);
     }
 }

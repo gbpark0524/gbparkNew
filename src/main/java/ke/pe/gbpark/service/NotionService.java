@@ -11,6 +11,7 @@ import ke.pe.gbpark.domain.NotionQuery.Filter;
 import ke.pe.gbpark.domain.NotionQuery.FilterValue;
 import ke.pe.gbpark.domain.NotionQuery.Sort;
 import ke.pe.gbpark.domain.NotionQuery.SortDirection;
+import ke.pe.gbpark.response.NotionResponse;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -25,8 +26,11 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @CacheConfig
@@ -37,9 +41,9 @@ public class NotionService {
     private String NOTION_TOKEN;
 
     private static final ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    
+
     @Cacheable(value = "notionPages", key = "#pageSize")
-    public List<NotionPageInfo> getNewNotionList(int pageSize) {
+    public List<NotionResponse> getNewNotionList(int pageSize) {
         final String notionVersion = "2022-06-28";
 
         OkHttpClient client = new OkHttpClient().newBuilder().build();
@@ -95,13 +99,18 @@ public class NotionService {
         return Collections.emptyList();
     }
 
-    private static List<NotionPageInfo> parseResponse(String responseBody) throws IOException {
+    private static List<NotionResponse> parseResponse(String responseBody) throws IOException {
         JsonNode rootNode = objectMapper.readTree(responseBody);
         JsonNode resultsNode = rootNode.path("results");
-
-        return objectMapper.readValue(
+        List<NotionPageInfo> pageInfos = objectMapper.readValue(
                 objectMapper.treeAsTokens(resultsNode),
-                new TypeReference<List<NotionPageInfo>>() {}
+                new TypeReference<>() {
+                }
         );
+
+        return pageInfos.stream()
+                .map(NotionResponse::from)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 }

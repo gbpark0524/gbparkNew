@@ -23,7 +23,7 @@ const githubInfo = {
     profileUrl: "https://github.com/gbpark0524",
 }
 
-const GithubContributionPortlet: React.FC = () => {
+const GithubContributionPortlet = () => {
     const [cells, setCells] = useState<Cell[]>([]);
 
     useEffect(() => {

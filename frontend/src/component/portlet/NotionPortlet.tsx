@@ -18,7 +18,8 @@ interface NotionPortletProps {
     pages: Page[];
 }
 
-const NotionPortlet: React.FC<NotionPortletProps> = ({pages}) => {
+const NotionPortlet = (props : NotionPortletProps) => {
+    const pages = props['pages'];
     return (
         <div>
             <Typography

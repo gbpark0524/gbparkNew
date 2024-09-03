@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 public class NotionService {
     final Logger logger = LoggerFactory.getLogger(NotionService.class);
 
-    @Value("#{environment['external-api.notion.token']}")
+    @Value("${external-api.notion.token}")
     private String NOTION_TOKEN;
 
     private static final ObjectMapper objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);

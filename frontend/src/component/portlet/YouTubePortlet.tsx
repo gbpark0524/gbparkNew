@@ -1,6 +1,6 @@
 import React from 'react';
 
-const YouTubeMusicPlaylist: React.FC = () => {
+const YouTubeMusicPlaylist = () => {
     const playlistId = 'PLbkbDd3Tye668O935H5Zv6zym74VR3K3u';
     const embedUrl = `https://www.youtube.com/embed/videoseries?list=${playlistId}`;
 

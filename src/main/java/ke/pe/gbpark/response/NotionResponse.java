@@ -1,6 +1,10 @@
 package ke.pe.gbpark.response;
 
 import ke.pe.gbpark.domain.NotionPageInfo;
+import ke.pe.gbpark.domain.NotionPageInfo.Properties.Name;
+import ke.pe.gbpark.domain.NotionPageInfo.Properties.Name.TitleContent;
+
+import java.util.stream.Collectors;
 
 public record NotionResponse(String id,
                              String url,
@@ -8,10 +12,14 @@ public record NotionResponse(String id,
                              String iconType,
                              String iconContent) {
     public static NotionResponse from(NotionPageInfo pageInfo) {
-        NotionPageInfo.Properties.Name name = pageInfo.properties().Name();
-        // name 필드 없는 페이지 필터
-        if (name == null) return null;
-        String title = name.title().get(0).plain_text();
+        Name name = pageInfo.properties().Name();
+        if (name == null || name.title().isEmpty()) {
+            return null;
+        }
+        
+        String title = name.title().stream()
+                .map(TitleContent::plain_text)
+                .collect(Collectors.joining(" "));
         String iconType = "";
         String iconContent = "";
         

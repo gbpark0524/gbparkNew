@@ -30,7 +30,7 @@ class NotionControllerTest {
         mockMvc.perform(get("/portlet/notion/list/" + size)
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", Matchers.hasSize(Matchers.lessThanOrEqualTo(size))))
+                .andExpect(jsonPath("$.data", Matchers.hasSize(Matchers.lessThanOrEqualTo(size))))
                 .andDo(print());
     }
 }

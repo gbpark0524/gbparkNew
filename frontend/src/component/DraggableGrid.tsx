@@ -16,14 +16,6 @@ const DraggableGrid = () => {
         { i: 'c', x: 2, y: 0, w: 2, h: 3 }
     ];
 
-    const pages = [
-        { title: '프로젝트 기획안', date: '8월 3일', url: 'https://notion.so/page1' },
-        { title: '회의록', date: '8월 1일', url: 'https://notion.so/page2' },
-        { title: '디자인 가이드라인', date: '7월 30일', url: 'https://notion.so/page3' },
-        { title: '주간 리포트', date: '7월 28일', url: 'https://notion.so/page4' },
-        { title: '마케팅 전략', date: '7월 26일', url: 'https://notion.so/page5' }
-    ];
-
     return (
         <ResponsiveGridLayout
             className="layout"
@@ -37,7 +29,7 @@ const DraggableGrid = () => {
             style={{width: '100%'}}
         >
             <Paper key="a" style={{ padding: 16 }}>
-                <NotionPortlet pages={pages}/>
+                <NotionPortlet/>
             </Paper>
             <Paper key="gitHub" className={'flex-center'} style={{ padding: 16, overflow:'hidden'}}>
                 <GithubContributionPortlet/>

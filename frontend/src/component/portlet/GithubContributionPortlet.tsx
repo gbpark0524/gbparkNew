@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import styles from '@assets/styles/GithubContributionPortlet.module.scss'
 import Tooltip from "@mui/material/Tooltip";
-import {Avatar, Box, Button, CardActions, CardContent, Link, Typography} from "@mui/material";
+import {Button, CardActions, CardContent, Link} from "@mui/material";
 import GitHubIcon from "@mui/icons-material/GitHub";
 
 interface GithubResponse {

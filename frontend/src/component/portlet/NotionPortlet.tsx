@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     List,
     ListItem,
@@ -7,19 +7,39 @@ import {
     Link
 } from '@mui/material';
 import DescriptionIcon from '@mui/icons-material/Description';
+import axios, {AxiosResponse} from "axios";
 
-interface Page {
+interface NotionPage {
+    id: string;
     title: string;
-    date: string;
-    url: string;  // Notion 페이지 URL
+    url: string;
+    iconType: string;
+    iconContent: string;
 }
 
-interface NotionPortletProps {
-    pages: Page[];
+interface Response {
+    success: boolean;
+    message: string;
+    data : NotionPage[];
 }
 
-const NotionPortlet = (props : NotionPortletProps) => {
-    const pages = props['pages'];
+const NotionPortlet = () => {
+    const [pages, setPages] = useState<NotionPage[]>([]);
+    
+    useEffect(() => {
+        axios.get<Response>('/portlet/notion/list/10')
+            .then((response: AxiosResponse<Response>) => {
+                if (response.data.success && Array.isArray(response.data.data)) {
+                    setPages(response.data.data);
+                } else {
+                    console.error('Received data is not in the expected format');
+                }
+            })
+            .catch((error) => {
+                console.error('Error fetching guestbooks:', error);
+            });
+    }, []);
+    
     return (
         <div>
             <Typography
@@ -36,7 +56,7 @@ const NotionPortlet = (props : NotionPortletProps) => {
             </Typography>
             <List>
                 {pages.map((page, index) => (
-                    <ListItem key={index} divider={index !== pages.length - 1}>
+                    <ListItem key={page.id} divider={index !== pages.length - 1}>
                         <ListItemText
                             primary={
                                 <Link
@@ -46,10 +66,14 @@ const NotionPortlet = (props : NotionPortletProps) => {
                                     underline="hover"
                                     color="inherit"
                                 >
+                                    {page.iconContent && (
+                                        <span style={{ marginRight: '8px' }}>
+                                            {page.iconType === 'EMOJI' ? page.iconContent : '🔗'}
+                                        </span>
+                                    )}
                                     {page.title}
                                 </Link>
                             }
-                            secondary={page.date}
                         />
                     </ListItem>
                 ))}

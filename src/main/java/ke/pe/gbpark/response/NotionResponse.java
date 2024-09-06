@@ -33,7 +33,7 @@ public record NotionResponse(String id,
 
         return new NotionResponse(
                 pageInfo.id(),
-                pageInfo.url(),
+                pageInfo.public_url(),
                 title,
                 iconType,
                 iconContent

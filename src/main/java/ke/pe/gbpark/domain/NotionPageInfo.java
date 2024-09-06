@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 
-public record NotionPageInfo(String id, String url, Icon icon, Properties properties) {
+public record NotionPageInfo(String id, String url, String public_url, Icon icon, Properties properties) {
 
     public record Properties(Name Name) {
         public record Name(List<TitleContent> title) {

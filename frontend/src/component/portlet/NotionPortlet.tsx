@@ -20,12 +20,12 @@ interface NotionPage {
 interface Response {
     success: boolean;
     message: string;
-    data : NotionPage[];
+    data: NotionPage[];
 }
 
 const NotionPortlet = () => {
     const [pages, setPages] = useState<NotionPage[]>([]);
-    
+
     useEffect(() => {
         axios.get<Response>('/portlet/notion/list/10')
             .then((response: AxiosResponse<Response>) => {
@@ -39,7 +39,7 @@ const NotionPortlet = () => {
                 console.error('Error fetching guestbooks:', error);
             });
     }, []);
-    
+
     return (
         <div>
             <Typography
@@ -52,7 +52,7 @@ const NotionPortlet = () => {
                 }}
             >
                 <DescriptionIcon/>
-                Notion
+                New Notion
             </Typography>
             <List>
                 {pages.map((page, index) => (
@@ -65,13 +65,18 @@ const NotionPortlet = () => {
                                     rel="noopener noreferrer"
                                     underline="hover"
                                     color="inherit"
+                                    className={'flex-center'}
+                                    style={{display: 'flex', alignItems: 'center', justifyContent: 'flex-start'}}
                                 >
-                                    {page.iconContent && (
-                                        <span style={{ marginRight: '8px' }}>
-                                            {page.iconType === 'EMOJI' ? page.iconContent : '🔗'}
+                                    {page.iconType === 'EMOJI' && page.iconContent && (
+                                        <span style={{marginRight: '8px'}}>
+                                            {page.iconContent}
                                         </span>
                                     )}
-                                    {page.title}
+                                    {page.iconType === 'EXTERNAL' && page.iconContent && (
+                                        <img src={page.iconContent} alt="" style={{width: '20px', marginRight: '8px'}}/>
+                                    )}
+                                    <span className={'ellipsis'}>{page.title}</span>
                                 </Link>
                             }
                         />

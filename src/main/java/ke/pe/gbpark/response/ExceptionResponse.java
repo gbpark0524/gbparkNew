@@ -6,14 +6,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public record ExceptionResponse(
-        String code,
+        int code,
         String message,
         Map<String, String> target) {
     @Builder
-    public ExceptionResponse(String code, String message, Map<String, String> target) {
-        if (code == null) {
-            throw new IllegalArgumentException("code must not be null");
-        }
+    public ExceptionResponse(int code, String message, Map<String, String> target) {
         this.code = code;
         this.message = message != null ? message : "";
         this.target = target != null ? target : new HashMap<>();

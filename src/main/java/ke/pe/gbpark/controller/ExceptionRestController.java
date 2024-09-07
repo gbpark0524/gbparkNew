@@ -19,7 +19,7 @@ public class ExceptionRestController {
     public ExceptionResponse invalidRequestHandler(MethodArgumentNotValidException e) {
         List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
         ExceptionResponse response = ExceptionResponse.builder()
-                .code("400")
+                .code(HttpStatus.BAD_REQUEST.value())
                 .message("Invalid parameter")
                 .build();
         for (FieldError fieldError : fieldErrors) {

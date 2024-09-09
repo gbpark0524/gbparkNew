@@ -1,11 +1,14 @@
 package ke.pe.gbpark.controller;
 
+import ke.pe.gbpark.exception.GbparkException;
 import ke.pe.gbpark.response.ExceptionResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -13,7 +16,7 @@ import java.util.List;
 
 @Slf4j
 @RestControllerAdvice
-public class ExceptionRestController {
+public class ExceptionController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ExceptionResponse invalidRequestHandler(MethodArgumentNotValidException e) {
@@ -26,5 +29,18 @@ public class ExceptionRestController {
             response.addTarget(fieldError.getField(), fieldError.getDefaultMessage());
         }
         return response;
+    }
+
+    @ResponseBody
+    @ExceptionHandler(GbparkException.class)
+    public ResponseEntity<ExceptionResponse> gbparkExceptionHandler(GbparkException e) {
+        HttpStatus statusCode = e.statusCode();
+        ExceptionResponse body = ExceptionResponse.builder()
+                .code(statusCode.value())
+                .message(e.getMessage())
+                .target(e.getTarget())
+                .build();
+
+        return ResponseEntity.status(statusCode).body(body);
     }
 }

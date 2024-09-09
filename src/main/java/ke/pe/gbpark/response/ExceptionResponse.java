@@ -1,10 +1,12 @@
 package ke.pe.gbpark.response;
 
 import lombok.Builder;
+import lombok.Getter;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Getter
 public record ExceptionResponse(
         int code,
         String message,

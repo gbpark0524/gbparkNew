@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 @Service
 @CacheConfig
 public class NotionService {
-    final Logger logger = LoggerFactory.getLogger(NotionService.class);
+    final Logger logger = LoggerFactory.getLogger(NotionService.class.getName());
 
     @Value("${external-api.notion.token}")
     private String NOTION_TOKEN;

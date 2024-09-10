@@ -14,7 +14,7 @@ import javax.management.timer.Timer;
 @EnableScheduling
 @EnableCaching
 public class CacheConfig {
-    final Logger logger = LoggerFactory.getLogger(CacheConfig.class);
+    final Logger logger = LoggerFactory.getLogger(CacheConfig.class.getName());
 
     @Scheduled(fixedRate = Timer.ONE_HOUR)
     @CacheEvict(

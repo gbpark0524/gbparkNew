@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.util.Optional.ofNullable;
 
 @Slf4j
 @RestControllerAdvice
@@ -21,14 +24,17 @@ public class ExceptionController {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ExceptionResponse invalidRequestHandler(MethodArgumentNotValidException e) {
         List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
-        ExceptionResponse response = ExceptionResponse.builder()
+        return ExceptionResponse.builder()
                 .code(HttpStatus.BAD_REQUEST.value())
                 .message("Invalid parameter")
+                .target(fieldErrors.stream()
+                        .collect(Collectors.toMap(
+                                FieldError::getField,
+                                error -> ofNullable(error.getDefaultMessage())
+                                        .orElse("Invalid value"),
+                                (msg1, msg2) -> msg1 + "; " + msg2
+                        )))
                 .build();
-        for (FieldError fieldError : fieldErrors) {
-            response.addTarget(fieldError.getField(), fieldError.getDefaultMessage());
-        }
-        return response;
     }
 
     @ResponseBody

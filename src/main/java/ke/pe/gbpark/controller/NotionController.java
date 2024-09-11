@@ -3,6 +3,7 @@ package ke.pe.gbpark.controller;
 import ke.pe.gbpark.response.NotionResponse;
 import ke.pe.gbpark.response.Response;
 import ke.pe.gbpark.service.NotionService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +15,7 @@ import static ke.pe.gbpark.response.Response.SUCCESS_MESSAGE;
 
 @RestController
 @RequestMapping("/portlet/notion")
+@Slf4j
 public class NotionController {
     private final NotionService notionService;
 

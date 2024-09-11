@@ -12,14 +12,13 @@ import ke.pe.gbpark.domain.NotionQuery.FilterValue;
 import ke.pe.gbpark.domain.NotionQuery.Sort;
 import ke.pe.gbpark.domain.NotionQuery.SortDirection;
 import ke.pe.gbpark.response.NotionResponse;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -33,9 +32,8 @@ import java.util.stream.Collectors;
 
 @Service
 @CacheConfig
+@Slf4j
 public class NotionService {
-    final Logger logger = LoggerFactory.getLogger(NotionService.class.getName());
-
     @Value("${external-api.notion.token}")
     private String NOTION_TOKEN;
 
@@ -60,7 +58,7 @@ public class NotionService {
         try {
             jsonString = objectMapper.writeValueAsString(query);
         } catch (JsonProcessingException e) {
-            logger.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
         RequestBody body = RequestBody.create(jsonString, mediaType);
 
@@ -78,7 +76,7 @@ public class NotionService {
 
             if (!response.isSuccessful() || responseBody == null) {
                 String errorMessage = String.format("Request failed with code: %d, body: %s", response.code(), responseBodyString);
-                logger.error(errorMessage);
+                log.error(errorMessage);
                 throw new IOException(errorMessage);
             }
             return parseResponse(responseBodyString);
@@ -93,7 +91,7 @@ public class NotionService {
                     "developer_survey": "https://notionup.typeform.com/to/bllBsoI4?utm_source=postman",
                     "request_id": "e74e6789-df65-448a-aef0-09160fca540b"
             }*/
-            logger.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
         return Collections.emptyList();
     }

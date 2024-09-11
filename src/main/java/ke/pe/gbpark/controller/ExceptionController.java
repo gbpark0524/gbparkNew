@@ -1,10 +1,9 @@
 package ke.pe.gbpark.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import ke.pe.gbpark.exception.GbparkException;
 import ke.pe.gbpark.response.ExceptionResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -22,13 +21,12 @@ import static java.util.Optional.ofNullable;
 @Slf4j
 @RestControllerAdvice
 public class ExceptionController {
-    final Logger logger = LoggerFactory.getLogger(ExceptionController.class.getName());
     
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ExceptionResponse invalidRequestHandler(MethodArgumentNotValidException e) {
         List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
-        logger.error(e.getMessage(), e);
+        log.error(e.getMessage(), e);
         return ExceptionResponse.builder()
                 .code(HttpStatus.BAD_REQUEST.value())
                 .message("Invalid parameter")
@@ -45,7 +43,7 @@ public class ExceptionController {
     @ResponseBody
     @ExceptionHandler(GbparkException.class)
     public ResponseEntity<ExceptionResponse> gbparkExceptionHandler(GbparkException e) {
-        logger.error(e.getMessage(), e);
+        log.error(e.getMessage(), e);
         HttpStatus statusCode = e.statusCode();
         ExceptionResponse body = ExceptionResponse.builder()
                 .code(statusCode.value())

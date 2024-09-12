@@ -10,7 +10,7 @@ logging:
       hibernate:
         orm:
           jdbc:
-            bind: trace
+            bind: info
 #        sql: debug
 
 spring:
@@ -26,7 +26,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-#    show-sql: true
+    open-in-view: false
+  #    show-sql: true
 
   data:
     web:

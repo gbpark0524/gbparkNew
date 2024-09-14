@@ -26,7 +26,7 @@ public class Board extends BaseTimeEntity {
     private boolean secret;
 
     @Lob
-    private  String content;
+    private String content;
 
     protected Board(String title, String content, boolean secret) {
         this.title = title;

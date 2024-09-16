@@ -25,7 +25,6 @@ public class ExceptionController {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ExceptionResponse invalidRequestHandler(MethodArgumentNotValidException e) {
         List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
-        log.error(e.getMessage(), e);
         return ExceptionResponse.builder()
                 .code(HttpStatus.BAD_REQUEST.value())
                 .message("Invalid parameter")
@@ -42,7 +41,6 @@ public class ExceptionController {
     @ResponseBody
     @ExceptionHandler(GbparkException.class)
     public ResponseEntity<ExceptionResponse> gbparkExceptionHandler(GbparkException e) {
-        log.error(e.getMessage(), e);
         HttpStatus statusCode = e.statusCode();
         ExceptionResponse body = ExceptionResponse.builder()
                 .code(statusCode.value())

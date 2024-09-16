@@ -12,7 +12,7 @@ function App() {
     useEffect(() => {
         setTimeout(() => {
             setIsLoading(false);
-        }, 1000); // 3초 후에 로딩 상태를 false로 설정 (테스트용)
+        }, 100);
     }, []);
 
     if (isLoading) {

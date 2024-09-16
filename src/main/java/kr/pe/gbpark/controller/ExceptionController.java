@@ -20,7 +20,7 @@ import static java.util.Optional.ofNullable;
 @Slf4j
 @RestControllerAdvice
 public class ExceptionController {
-    
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ExceptionResponse invalidRequestHandler(MethodArgumentNotValidException e) {

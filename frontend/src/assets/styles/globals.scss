@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap');
+
 * {
   margin: 0;
   padding: 0;
@@ -39,4 +41,10 @@ img {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+}
+
+.emoji {
+  font-family: "Noto Color Emoji", sans-serif;
+  font-weight: 400;
+  font-style: normal;
 }

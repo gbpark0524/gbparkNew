@@ -1,11 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-    List,
-    ListItem,
-    ListItemText,
-    Typography,
-    Link
-} from '@mui/material';
+import {Link, List, ListItem, ListItemText, Typography} from '@mui/material';
 import DescriptionIcon from '@mui/icons-material/Description';
 import axios, {AxiosResponse} from "axios";
 
@@ -69,7 +63,7 @@ const NotionPortlet = () => {
                                     style={{display: 'flex', alignItems: 'center', justifyContent: 'flex-start'}}
                                 >
                                     {page.iconType === 'EMOJI' && page.iconContent && (
-                                        <span style={{marginRight: '8px'}}>
+                                        <span className={'emoji'} style={{marginRight: '8px'}}>
                                             {page.iconContent}
                                         </span>
                                     )}

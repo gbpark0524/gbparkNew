@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
 import axios, {AxiosResponse} from "axios";
 import {parseISO, format} from "date-fns";
+import BoardDetail from "@component/BoardDetail";
 
 interface PaginatedResponse {
     page: number;
@@ -51,35 +52,39 @@ const Guestbook = (): React.ReactElement => {
     }, []);
 
     return (
-        <TableContainer component={Paper}>
-            <Table sx={{minWidth: 650}} aria-label="simple table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>번호</TableCell>
-                        <TableCell align="left">제목</TableCell>
-                        <TableCell align="right">작성자</TableCell>
-                        <TableCell align="right">작성일</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {rows.map((row: RowData) => (
-                        <TableRow
-                            key={row.id}
-                            sx={{'&:last-child td, &:last-child th': {border: 0}}}
-                            onClick={() => {
-                            }}
-                        >
-                            <TableCell component="th" scope="row">
-                                {row.id}
-                            </TableCell>
-                            <TableCell align="left">{row.title}</TableCell>
-                            <TableCell align="right">{row.writer}</TableCell>
-                            <TableCell align="right">{row.date}</TableCell>
+        <div>
+            
+            <TableContainer component={Paper}>
+                <Table sx={{minWidth: 650}} aria-label="simple table">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>번호</TableCell>
+                            <TableCell align="left">제목</TableCell>
+                            <TableCell align="right">작성자</TableCell>
+                            <TableCell align="right">작성일</TableCell>
                         </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
+                    </TableHead>
+                    <TableBody>
+                        {rows.map((row: RowData) => (
+                            <TableRow
+                                key={row.id}
+                                sx={{'&:last-child td, &:last-child th': {border: 0}}}
+                                onClick={() => {
+                                }}
+                            >
+                                <TableCell component="th" scope="row">
+                                    {row.id}
+                                </TableCell>
+                                <TableCell align="left">{row.title}</TableCell>
+                                <TableCell align="right">{row.writer}</TableCell>
+                                <TableCell align="right">{row.date}</TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            <BoardDetail/>
+        </div>
     );
 }
 

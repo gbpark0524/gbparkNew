@@ -16,7 +16,7 @@ import { useNavigate } from 'react-router-dom';
 
 const pages = [
     { name: 'Home', path: '/' },
-    { name: 'Guestbook', path: '/guestbook' }
+    { name: 'Guestbook', path: '/guestbook' },
 ];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 

@@ -19,6 +19,18 @@ interface RowData {
     date: string;
 }
 
+interface BoardDetail {
+    title: string,
+    writer: string,
+    content: string,
+}
+
+const boardCont : BoardDetail =  {
+    title : 'title',
+    writer : 'writer',
+    content : 'content',
+}
+
 const formatDate = (dateString: string): string => {
     const date = parseISO(dateString);
     return format(date, 'yyyy-MM-dd');
@@ -26,10 +38,19 @@ const formatDate = (dateString: string): string => {
 
 const Guestbook = (): React.ReactElement => {
     const [rows, setRows] = useState<RowData[]>([]);
+    const [boardDetail, setBoardDetail] = useState<BoardDetail | null>(null);
     // const [totalCount, setTotalCount] = useState<number>(0);
     // const [currentPage, setCurrentPage] = useState<number>(1);
     // const [pageSize, setPageSize] = useState<number>(10);
 
+    const boardClick = (row: RowData) => {
+        setBoardDetail({
+            title: row.title,
+            writer: row.writer,
+            content: row.content
+        });
+    };
+    
     useEffect(() => {
         axios.get<PaginatedResponse>('/board/guestbooks')
             .then((response: AxiosResponse<PaginatedResponse>) => {
@@ -68,9 +89,8 @@ const Guestbook = (): React.ReactElement => {
                         {rows.map((row: RowData) => (
                             <TableRow
                                 key={row.id}
-                                sx={{'&:last-child td, &:last-child th': {border: 0}}}
-                                onClick={() => {
-                                }}
+                                sx={{'&:last-child td, &:last-child th': {border: 0}, cursor: 'pointer'}}
+                                onClick={() => {boardClick(row)}}
                             >
                                 <TableCell component="th" scope="row">
                                     {row.id}
@@ -83,7 +103,7 @@ const Guestbook = (): React.ReactElement => {
                     </TableBody>
                 </Table>
             </TableContainer>
-            <BoardDetail/>
+            {boardDetail && <BoardDetail board={boardDetail} />}
         </div>
     );
 }

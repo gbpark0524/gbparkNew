@@ -1,8 +1,21 @@
 import React, {useEffect, useState} from 'react';
-import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
+import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary, Card, CardContent,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow
+} from '@mui/material';
+import {ArrowDropDown} from '@mui/icons-material';
 import axios, {AxiosResponse} from "axios";
-import {parseISO, format} from "date-fns";
+import {format, parseISO} from "date-fns";
 import BoardDetail from "@component/BoardDetail";
+import Typography from "@mui/material/Typography";
 
 interface PaginatedResponse {
     page: number;
@@ -25,12 +38,6 @@ interface BoardDetail {
     content: string,
 }
 
-const boardCont : BoardDetail =  {
-    title : 'title',
-    writer : 'writer',
-    content : 'content',
-}
-
 const formatDate = (dateString: string): string => {
     const date = parseISO(dateString);
     return format(date, 'yyyy-MM-dd');
@@ -50,7 +57,7 @@ const Guestbook = (): React.ReactElement => {
             content: row.content
         });
     };
-    
+
     useEffect(() => {
         axios.get<PaginatedResponse>('/board/guestbooks')
             .then((response: AxiosResponse<PaginatedResponse>) => {
@@ -74,36 +81,51 @@ const Guestbook = (): React.ReactElement => {
 
     return (
         <div>
-            
-            <TableContainer component={Paper}>
-                <Table sx={{minWidth: 650}} aria-label="simple table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>번호</TableCell>
-                            <TableCell align="left">제목</TableCell>
-                            <TableCell align="right">작성자</TableCell>
-                            <TableCell align="right">작성일</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {rows.map((row: RowData) => (
-                            <TableRow
-                                key={row.id}
-                                sx={{'&:last-child td, &:last-child th': {border: 0}, cursor: 'pointer'}}
-                                onClick={() => {boardClick(row)}}
-                            >
-                                <TableCell component="th" scope="row">
-                                    {row.id}
-                                </TableCell>
-                                <TableCell align="left">{row.title}</TableCell>
-                                <TableCell align="right">{row.writer}</TableCell>
-                                <TableCell align="right">{row.date}</TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-            {boardDetail && <BoardDetail board={boardDetail} />}
+            <Accordion defaultExpanded>
+                <AccordionSummary
+                    expandIcon={<ArrowDropDown/>}
+                    aria-controls="panel1-content"
+                    id="panel1-header"
+                >
+                    <Typography variant={'h4'}>Guestbook</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <TableContainer component={Paper}>
+                        <Table sx={{minWidth: 650}} aria-label="simple table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>번호</TableCell>
+                                    <TableCell align="left">제목</TableCell>
+                                    <TableCell align="right">작성자</TableCell>
+                                    <TableCell align="right">작성일</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {rows.map((row: RowData) => (
+                                    <TableRow
+                                        key={row.id}
+                                        sx={{'&:last-child td, &:last-child th': {border: 0}, cursor: 'pointer'}}
+                                        onClick={() => {
+                                            boardClick(row)
+                                        }}
+                                    >
+                                        <TableCell component="th" scope="row">
+                                            {row.id}
+                                        </TableCell>
+                                        <TableCell align="left">{row.title}</TableCell>
+                                        <TableCell align="right">{row.writer}</TableCell>
+                                        <TableCell align="right">{row.date}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
+                </AccordionDetails>
+            </Accordion>
+            <Paper elevation={1} sx={{
+                    p: 3,}}>
+                {boardDetail && <BoardDetail board={boardDetail}/>}
+            </Paper>
         </div>
     );
 }

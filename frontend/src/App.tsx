@@ -5,6 +5,7 @@ import Guestbook from '@page/Guestbook';
 import Main from '@page/Main';
 import {Route, Routes} from "react-router";
 import Loading from "@component/Loading";
+import WriteForm from "@component/WriteForm";
 
 function App() {
     const [isLoading, setIsLoading] = useState(true);
@@ -26,6 +27,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Main />} />
                     <Route path="/guestbook" element={<Guestbook />} />
+                    <Route path="/test" element={<WriteForm />} />
                     <Route path="/*" element={<Main />} />
                 </Routes>
             </div>

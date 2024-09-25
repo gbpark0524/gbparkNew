@@ -122,10 +122,12 @@ const Guestbook = (): React.ReactElement => {
                     </TableContainer>
                 </AccordionDetails>
             </Accordion>
-            <Paper elevation={1} sx={{
-                    p: 3,}}>
-                {boardDetail && <BoardDetail board={boardDetail}/>}
-            </Paper>
+            {
+                boardDetail &&
+                <Paper elevation={1} sx={{p: 3,}}>
+                    <BoardDetail board={boardDetail}/>
+                </Paper>
+            }
         </div>
     );
 }

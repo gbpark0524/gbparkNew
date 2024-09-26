@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {
     Accordion,
     AccordionDetails,
-    AccordionSummary, Card, CardContent,
+    AccordionSummary,
     Paper,
     Table,
     TableBody,
@@ -32,7 +32,7 @@ interface RowData {
     date: string;
 }
 
-interface BoardDetail {
+interface BoardData {
     title: string,
     writer: string,
     content: string,
@@ -45,13 +45,13 @@ const formatDate = (dateString: string): string => {
 
 const Guestbook = (): React.ReactElement => {
     const [rows, setRows] = useState<RowData[]>([]);
-    const [boardDetail, setBoardDetail] = useState<BoardDetail | null>(null);
+    const [boardData, setBoardData] = useState<BoardData | null>(null);
     // const [totalCount, setTotalCount] = useState<number>(0);
     // const [currentPage, setCurrentPage] = useState<number>(1);
     // const [pageSize, setPageSize] = useState<number>(10);
 
     const boardClick = (row: RowData) => {
-        setBoardDetail({
+        setBoardData({
             title: row.title,
             writer: row.writer,
             content: row.content
@@ -123,9 +123,9 @@ const Guestbook = (): React.ReactElement => {
                 </AccordionDetails>
             </Accordion>
             {
-                boardDetail &&
+                boardData &&
                 <Paper elevation={1} sx={{p: 3,}}>
-                    <BoardDetail board={boardDetail}/>
+                    <BoardDetail board={boardData}/>
                 </Paper>
             }
         </div>

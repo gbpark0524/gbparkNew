@@ -5,7 +5,7 @@ import Guestbook from '@page/Guestbook';
 import Main from '@page/Main';
 import {Route, Routes} from "react-router";
 import Loading from "@component/Loading";
-import WriteForm from "@component/WriteForm";
+import FormGuestbook from "@page/FormGuestbook";
 
 function App() {
     const [isLoading, setIsLoading] = useState(true);
@@ -17,18 +17,18 @@ function App() {
     }, []);
 
     if (isLoading) {
-        return <Loading />;
+        return <Loading/>;
     }
 
     return (
         <div className="App">
-            <ResponsiveAppBar />
+            <ResponsiveAppBar/>
             <div className={'content'}>
                 <Routes>
-                    <Route path="/" element={<Main />} />
-                    <Route path="/guestbook" element={<Guestbook />} />
-                    <Route path="/test" element={<WriteForm />} />
-                    <Route path="/*" element={<Main />} />
+                    <Route path="/" element={<Main/>}/>
+                    <Route path="/guestbook" element={<Guestbook/>}/>
+                    <Route path="/guestbook/write" element={<FormGuestbook/>}/>
+                    <Route path="/*" element={<Main/>}/>
                 </Routes>
             </div>
         </div>

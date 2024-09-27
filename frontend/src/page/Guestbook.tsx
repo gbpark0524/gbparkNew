@@ -3,19 +3,21 @@ import {
     Accordion,
     AccordionDetails,
     AccordionSummary,
+    Fab,
     Paper,
     Table,
     TableBody,
     TableCell,
     TableContainer,
     TableHead,
-    TableRow
+    TableRow,
+    Typography
 } from '@mui/material';
-import {ArrowDropDown} from '@mui/icons-material';
+import {ArrowDropDown, Create} from '@mui/icons-material';
 import axios, {AxiosResponse} from "axios";
 import {format, parseISO} from "date-fns";
 import BoardDetail from "@component/BoardDetail";
-import Typography from "@mui/material/Typography";
+import {useNavigate} from 'react-router-dom';
 
 interface PaginatedResponse {
     page: number;
@@ -43,7 +45,9 @@ const formatDate = (dateString: string): string => {
     return format(date, 'yyyy-MM-dd');
 };
 
+
 const Guestbook = (): React.ReactElement => {
+    const navigate = useNavigate();
     const [rows, setRows] = useState<RowData[]>([]);
     const [boardData, setBoardData] = useState<BoardData | null>(null);
     // const [totalCount, setTotalCount] = useState<number>(0);
@@ -128,6 +132,14 @@ const Guestbook = (): React.ReactElement => {
                     <BoardDetail board={boardData}/>
                 </Paper>
             }
+            <Fab
+                color="primary"
+                aria-label="writing guestboard"
+                style={{position: 'fixed', bottom: 30, right: 30}}
+                onClick={() => navigate('/guestbook/write')}
+            >
+                <Create/>
+            </Fab>
         </div>
     );
 }

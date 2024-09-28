@@ -1,5 +1,16 @@
 import React, {useState} from 'react';
-import {Box, Button, Grid, IconButton, InputAdornment, Paper, TextField, Typography} from '@mui/material';
+import {
+    Box,
+    Button,
+    Checkbox,
+    FormControlLabel,
+    Grid,
+    IconButton,
+    InputAdornment,
+    Paper,
+    TextField,
+    Typography
+} from '@mui/material';
 import {Visibility, VisibilityOff} from '@mui/icons-material';
 
 interface WriteFormData {
@@ -8,6 +19,7 @@ interface WriteFormData {
     email: string;
     password: string;
     content: string;
+    isSecret: boolean;
 }
 
 interface WriteFormProps {
@@ -22,21 +34,21 @@ const WriteForm = ({onSubmit, onCancel, initialData = {}}: WriteFormProps) => {
         writer: initialData.writer || '',
         email: initialData.email || '',
         password: initialData.password || '',
-        content: initialData.content || ''
+        content: initialData.content || '',
+        isSecret: initialData.isSecret || false
     });
 
     const [showPassword, setShowPassword] = useState(false);
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const {name, value} = event.target;
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const {name, value, type, checked} = event.target;
         setFormData(prevData => ({
             ...prevData,
-            [name]: value
+            [name]: type === 'checkbox' ? checked : value
         }));
     };
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
         onSubmit(formData);
     };
 
@@ -50,17 +62,33 @@ const WriteForm = ({onSubmit, onCancel, initialData = {}}: WriteFormProps) => {
                 글쓰기
             </Typography>
             <Box component="form" onSubmit={handleSubmit} noValidate sx={{mt: 1}}>
-                <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    id="title"
-                    label="제목"
-                    name="title"
-                    autoFocus
-                    value={formData.title}
-                    onChange={handleChange}
-                />
+                <Grid container spacing={2} alignItems="center">
+                    <Grid item xs={9}>
+                        <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="title"
+                            label="제목"
+                            name="title"
+                            autoFocus
+                            value={formData.title}
+                            onChange={handleChange}
+                        />
+                    </Grid>
+                    <Grid item xs={3}>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={formData.isSecret}
+                                    onChange={handleChange}
+                                    name="isSecret"
+                                />
+                            }
+                            label="비밀글"
+                        />
+                    </Grid>
+                </Grid>
                 <Grid container spacing={2}>
                     <Grid item xs={8}>
                         <TextField

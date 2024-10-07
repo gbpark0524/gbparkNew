@@ -49,6 +49,8 @@ const WriteForm = ({onSubmit, onCancel, initialData = {}}: WriteFormProps) => {
     };
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        
         onSubmit(formData);
     };
 

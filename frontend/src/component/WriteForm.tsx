@@ -63,11 +63,12 @@ const WriteForm = ({onSubmit, onCancel, initialData = {}}: WriteFormProps) => {
     };
     
     const validate = () => {
-        const validations = {
-            title: validateTitle,
-            password: validatePassword,
-        };
-        return Object.values(validations).reduce((isValid, validationFn) => {
+        // All validations must pass
+        const validateAllRequired = [validateTitle,validatePassword];
+        // optional validations
+        // const validateAnyOptional = [];
+        
+        return validateAllRequired.reduce((isValid, validationFn) => {
             const currentResult = validationFn();
             return isValid && currentResult;
         }, true);

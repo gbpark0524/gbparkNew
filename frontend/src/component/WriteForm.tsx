@@ -19,7 +19,7 @@ interface WriteFormData {
     email: string;
     password: string;
     content: string;
-    isSecret: boolean;
+    secret: boolean;
 }
 
 interface WriteFormProps {
@@ -35,7 +35,7 @@ const WriteForm = ({onSubmit, onCancel, initialData = {}}: WriteFormProps) => {
         email: initialData.email || '',
         password: initialData.password || '',
         content: initialData.content || '',
-        isSecret: initialData.isSecret || false
+        secret: initialData.secret || false
     });
 
     const [showPassword, setShowPassword] = useState(false);
@@ -75,7 +75,7 @@ const WriteForm = ({onSubmit, onCancel, initialData = {}}: WriteFormProps) => {
     }
 
     const validateTitle = () => {
-        if (!!formData.title.trim()) {
+        if (formData.title.trim()) {
             setTitleError(false);
             return true;
         } else {
@@ -85,7 +85,7 @@ const WriteForm = ({onSubmit, onCancel, initialData = {}}: WriteFormProps) => {
     };
 
     const validatePassword = () => {
-        if (!!formData.password.trim()) {
+        if (formData.password.trim()) {
             setPassError(false);
             return true;
         } else {
@@ -120,9 +120,9 @@ const WriteForm = ({onSubmit, onCancel, initialData = {}}: WriteFormProps) => {
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    checked={formData.isSecret}
+                                    checked={formData.secret}
                                     onChange={handleChange}
-                                    name="isSecret"
+                                    name="secret"
                                 />
                             }
                             label="비밀글"

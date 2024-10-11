@@ -9,7 +9,7 @@ interface WriteFormData {
     email: string;
     password: string;
     content: string;
-    isSecret: boolean;
+    secret: boolean;
 }
 
 const FormGuestbook = () => {

@@ -6,6 +6,7 @@ import kr.pe.gbpark.request.GuestBookCreate;
 import kr.pe.gbpark.request.GuestBookSearch;
 import kr.pe.gbpark.response.GuestBookResponse;
 import kr.pe.gbpark.response.PaginationResponse;
+import kr.pe.gbpark.util.service.SecurityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -19,13 +20,16 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class GuestBookService {
     private final GuestBookRepository guestBookRepository;
+    private final SecurityService securityService;
 
     public void write(GuestBookCreate guestBookCreate) {
+        String encodedPassword = securityService.encodePassword(guestBookCreate.getPassword());
+
         GuestBook guestBook =
                 GuestBook.builder(guestBookCreate.getTitle())
                         .content(guestBookCreate.getContent())
                         .writer(guestBookCreate.getWriter())
-                        .password(guestBookCreate.getPassword())
+                        .password(encodedPassword)
                         .email(guestBookCreate.getEmail())
                         .ip(guestBookCreate.getIp())
                         .secret(guestBookCreate.isSecret())

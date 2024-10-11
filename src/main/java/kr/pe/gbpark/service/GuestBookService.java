@@ -40,12 +40,7 @@ public class GuestBookService {
 
     public Optional<GuestBookResponse> get(Long id) {
         return guestBookRepository.findById(id)
-                .map(guestBook -> GuestBookResponse.builder(guestBook.getTitle())
-                        .id(id)
-                        .content(guestBook.getContent())
-                        .writer(guestBook.getWriter())
-                        .date(guestBook.getLastModifiedDate().format(DateTimeFormatter.ISO_DATE_TIME))
-                        .build());
+                .map(GuestBookResponse::new);
     }
 
     public PaginationResponse<GuestBookResponse> getList(GuestBookSearch guestBookSearch) {

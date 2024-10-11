@@ -21,7 +21,7 @@ public class GuestBookResponse {
     public GuestBookResponse(GuestBook guestBook) {
         this.id = guestBook.getId();
         this.title = guestBook.getTitle();
-        this.content = guestBook.getContent();
+        this.content = guestBook.isSecret() ? "[비밀글입니다]" : guestBook.getContent();
         this.writer = guestBook.getWriter();
         this.date = guestBook.getLastModifiedDate().format(DateTimeFormatter.ISO_DATE_TIME);
         this.secret = guestBook.isSecret();

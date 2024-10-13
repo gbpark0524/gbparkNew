@@ -15,12 +15,13 @@ import {
     TableRow,
     Typography
 } from '@mui/material';
-import {ArrowDropDown, Create} from '@mui/icons-material';
+import {ArrowDropDown, Create, Lock} from '@mui/icons-material';
 import axios from "axios";
 import {format, parseISO} from "date-fns";
 import BoardDetail from "@component/BoardDetail";
 import {useNavigate} from 'react-router-dom';
 import TablePaginationActions from "@mui/material/TablePagination/TablePaginationActions";
+import IconButton from "@mui/material/IconButton";
 
 interface PaginatedResponse {
     page: number;
@@ -36,6 +37,7 @@ interface RowData {
     content: string;
     writer: string;
     date: string;
+    secret: boolean;
 }
 
 interface BoardData {
@@ -56,13 +58,18 @@ const Guestbook = (): React.ReactElement => {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [totalCount, setTotalCount] = useState(0);
+    const [selectedId, setSelectedId] = useState<number | null>(null);
 
     const boardClick = (row: RowData) => {
-        setBoardData({
-            title: row.title,
-            writer: row.writer,
-            content: row.content
-        });
+        if (!row.secret) {
+            setBoardData({
+                title: row.title,
+                writer: row.writer,
+                content: row.content
+            });
+            setSelectedId(row.id);
+        }
+
     };
 
     useEffect(() => {
@@ -132,13 +139,24 @@ const Guestbook = (): React.ReactElement => {
                                 {rows.map((row: RowData) => (
                                     <TableRow
                                         key={row.id}
-                                        sx={{'&:last-child td, &:last-child th': {border: 0}, cursor: 'pointer'}}
+                                        selected={selectedId === row.id}
+                                        sx={{
+                                            '&:last-child td, &:last-child th': {border: 0},
+                                            cursor: row.secret ? 'default' : 'pointer',
+                                        }}
                                         onClick={() => boardClick(row)}
                                     >
                                         <TableCell component="th" scope="row">
                                             {row.id}
                                         </TableCell>
-                                        <TableCell align="left">{row.title}</TableCell>
+                                        <TableCell align="left">
+                                            {row.title}
+                                            {row.secret && (
+                                                <IconButton size="small">
+                                                    <Lock fontSize="small"/>
+                                                </IconButton>
+                                            )}
+                                        </TableCell>
                                         <TableCell align="right">{row.writer}</TableCell>
                                         <TableCell align="right">{row.date}</TableCell>
                                     </TableRow>

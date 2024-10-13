@@ -1,12 +1,33 @@
 import React, {useEffect, useState} from 'react';
-import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@mui/material';
-import axios, {AxiosResponse} from "axios";
-import {parseISO, format} from "date-fns";
+import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
+    Fab,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableFooter,
+    TableHead,
+    TablePagination,
+    TableRow,
+    Typography
+} from '@mui/material';
+import {ArrowDropDown, Create, Lock} from '@mui/icons-material';
+import axios from "axios";
+import {format, parseISO} from "date-fns";
+import BoardDetail from "@component/BoardDetail";
+import {useNavigate} from 'react-router-dom';
+import TablePaginationActions from "@mui/material/TablePagination/TablePaginationActions";
+import IconButton from "@mui/material/IconButton";
 
 interface PaginatedResponse {
     page: number;
     size: number;
     totalCount: number;
+    totalPage: number;
     items: RowData[];
 }
 
@@ -16,6 +37,13 @@ interface RowData {
     content: string;
     writer: string;
     date: string;
+    secret: boolean;
+}
+
+interface BoardData {
+    title: string,
+    writer: string,
+    content: string,
 }
 
 const formatDate = (dateString: string): string => {
@@ -24,62 +52,156 @@ const formatDate = (dateString: string): string => {
 };
 
 const Guestbook = (): React.ReactElement => {
+    const navigate = useNavigate();
     const [rows, setRows] = useState<RowData[]>([]);
-    // const [totalCount, setTotalCount] = useState<number>(0);
-    // const [currentPage, setCurrentPage] = useState<number>(1);
-    // const [pageSize, setPageSize] = useState<number>(10);
+    const [boardData, setBoardData] = useState<BoardData | null>(null);
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [totalCount, setTotalCount] = useState(0);
+    const [selectedId, setSelectedId] = useState<number | null>(null);
+
+    const boardClick = (row: RowData) => {
+        if (!row.secret) {
+            setBoardData({
+                title: row.title,
+                writer: row.writer,
+                content: row.content
+            });
+            setSelectedId(row.id);
+        }
+
+    };
 
     useEffect(() => {
-        axios.get<PaginatedResponse>('/board/guestbooks')
-            .then((response: AxiosResponse<PaginatedResponse>) => {
-                if (response.data && Array.isArray(response.data.items)) {
-                    const formattedRows = response.data.items.map(row => ({
-                        ...row,
-                        date: formatDate(row.date)
-                    }));
-                    setRows(formattedRows);
-                    // setTotalCount(response.data.totalCount);
-                    // setCurrentPage(response.data.page);
-                    // setPageSize(response.data.size);
-                } else {
-                    console.error('Received data is not in the expected format');
+        let isMounted = true;
+
+        const fetchGuestbooks = async () => {
+            try {
+                const response = await axios.get<PaginatedResponse>(`/board/guestbooks?page=${page + 1}&size=${rowsPerPage}`);
+                if (isMounted) {
+                    if (response.data && Array.isArray(response.data.items)) {
+                        const formattedRows = response.data.items.map(row => ({
+                            ...row,
+                            date: formatDate(row.date)
+                        }));
+                        setRows(formattedRows);
+                        setTotalCount(response.data.totalCount);
+                    } else {
+                        console.error('Received data is not in the expected format');
+                    }
                 }
-            })
-            .catch((error) => {
-                console.error('Error fetching guestbooks:', error);
-            });
-    }, []);
+            } catch (error) {
+                if (isMounted) {
+                    console.error('Error fetching guestbooks:', error);
+                }
+            }
+        };
+
+        fetchGuestbooks().then(() => isMounted = false);
+    }, [page, rowsPerPage]);
+
+    const handleChangePage = (
+        event: React.MouseEvent<HTMLButtonElement> | null,
+        newPage: number,
+    ) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (
+        event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    ) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
 
     return (
-        <TableContainer component={Paper}>
-            <Table sx={{minWidth: 650}} aria-label="simple table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>번호</TableCell>
-                        <TableCell align="left">제목</TableCell>
-                        <TableCell align="right">작성자</TableCell>
-                        <TableCell align="right">작성일</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {rows.map((row: RowData) => (
-                        <TableRow
-                            key={row.id}
-                            sx={{'&:last-child td, &:last-child th': {border: 0}}}
-                            onClick={() => {
-                            }}
-                        >
-                            <TableCell component="th" scope="row">
-                                {row.id}
-                            </TableCell>
-                            <TableCell align="left">{row.title}</TableCell>
-                            <TableCell align="right">{row.writer}</TableCell>
-                            <TableCell align="right">{row.date}</TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
+        <div>
+            <Accordion defaultExpanded>
+                <AccordionSummary
+                    expandIcon={<ArrowDropDown/>}
+                    aria-controls="panel1-content"
+                    id="panel1-header"
+                >
+                    <Typography variant={'h4'}>Guestbook</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <TableContainer component={Paper}>
+                        <Table sx={{minWidth: 650}} aria-label="simple table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>번호</TableCell>
+                                    <TableCell align="left">제목</TableCell>
+                                    <TableCell align="right">작성자</TableCell>
+                                    <TableCell align="right">작성일</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                {rows.map((row: RowData) => (
+                                    <TableRow
+                                        key={row.id}
+                                        selected={selectedId === row.id}
+                                        sx={{
+                                            '&:last-child td, &:last-child th': {border: 0},
+                                            cursor: row.secret ? 'default' : 'pointer',
+                                        }}
+                                        onClick={() => boardClick(row)}
+                                    >
+                                        <TableCell component="th" scope="row">
+                                            {row.id}
+                                        </TableCell>
+                                        <TableCell align="left">
+                                            {row.title}
+                                            {row.secret && (
+                                                <IconButton size="small">
+                                                    <Lock fontSize="small"/>
+                                                </IconButton>
+                                            )}
+                                        </TableCell>
+                                        <TableCell align="right">{row.writer}</TableCell>
+                                        <TableCell align="right">{row.date}</TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                            <TableFooter>
+                                <TableRow>
+                                    <TablePagination
+                                        rowsPerPageOptions={[5, 10, 25]}
+                                        colSpan={4}
+                                        count={totalCount}
+                                        rowsPerPage={rowsPerPage}
+                                        page={page}
+                                        slotProps={{
+                                            select: {
+                                                inputProps: {
+                                                    'aria-label': '페이지당 행 수',
+                                                },
+                                                native: true,
+                                            },
+                                        }}
+                                        onPageChange={handleChangePage}
+                                        onRowsPerPageChange={handleChangeRowsPerPage}
+                                        ActionsComponent={TablePaginationActions}
+                                    />
+                                </TableRow>
+                            </TableFooter>
+                        </Table>
+                    </TableContainer>
+                </AccordionDetails>
+            </Accordion>
+            {boardData && (
+                <Paper elevation={1} sx={{p: 3,}}>
+                    <BoardDetail board={boardData}/>
+                </Paper>
+            )}
+            <Fab
+                color="primary"
+                aria-label="writing guestboard"
+                style={{position: 'fixed', bottom: 30, right: 30}}
+                onClick={() => navigate('/guestbook/write')}
+            >
+                <Create/>
+            </Fab>
+        </div>
     );
 }
 

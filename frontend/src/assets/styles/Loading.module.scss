@@ -1,8 +1,6 @@
-@import 'globals';
-
 $loadingColor: #5C8DF6;
-$colorRight: darken(#5C8DF6, 15%);
-$colorLeft: darken(#5C8DF6, 5%);
+$colorRight: adjust-color(#5C8DF6, $lightness: -15%);
+$colorLeft: adjust-color(#5C8DF6, $lightness: -5%);
 $shadow: #DBE3F4;
 
 .boxes {
@@ -128,7 +126,7 @@ html {
 }
 
 .loading {
-  @extend .ff;
-  @extend .flex-center-col;
+  @include full;
+  @include flexCenter(true);
   min-height: 18vh;
 }

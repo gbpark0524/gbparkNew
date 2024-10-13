@@ -1,24 +1,39 @@
-import React from 'react';
-import {
-    List,
-    ListItem,
-    ListItemText,
-    Typography,
-    Link
-} from '@mui/material';
+import React, {useEffect, useState} from 'react';
+import {Link, List, ListItem, ListItemText, Typography} from '@mui/material';
 import DescriptionIcon from '@mui/icons-material/Description';
+import axios, {AxiosResponse} from "axios";
 
-interface Page {
+interface NotionPage {
+    id: string;
     title: string;
-    date: string;
-    url: string;  // Notion 페이지 URL
+    url: string;
+    iconType: string;
+    iconContent: string;
 }
 
-interface NotionPortletProps {
-    pages: Page[];
+interface Response {
+    success: boolean;
+    message: string;
+    data: NotionPage[];
 }
 
-const NotionPortlet: React.FC<NotionPortletProps> = ({pages}) => {
+const NotionPortlet = () => {
+    const [pages, setPages] = useState<NotionPage[]>([]);
+
+    useEffect(() => {
+        axios.get<Response>('/portlet/notion/list/10')
+            .then((response: AxiosResponse<Response>) => {
+                if (response.data.success && Array.isArray(response.data.data)) {
+                    setPages(response.data.data);
+                } else {
+                    console.error('Received data is not in the expected format');
+                }
+            })
+            .catch((error) => {
+                console.error('Error fetching guestbooks:', error);
+            });
+    }, []);
+
     return (
         <div>
             <Typography
@@ -31,11 +46,11 @@ const NotionPortlet: React.FC<NotionPortletProps> = ({pages}) => {
                 }}
             >
                 <DescriptionIcon/>
-                Notion
+                New Notion
             </Typography>
             <List>
                 {pages.map((page, index) => (
-                    <ListItem key={index} divider={index !== pages.length - 1}>
+                    <ListItem key={page.id} divider={index !== pages.length - 1}>
                         <ListItemText
                             primary={
                                 <Link
@@ -44,11 +59,20 @@ const NotionPortlet: React.FC<NotionPortletProps> = ({pages}) => {
                                     rel="noopener noreferrer"
                                     underline="hover"
                                     color="inherit"
+                                    className={'flex-center'}
+                                    style={{display: 'flex', alignItems: 'center', justifyContent: 'flex-start'}}
                                 >
-                                    {page.title}
+                                    {page.iconType === 'EMOJI' && page.iconContent && (
+                                        <span className={'emoji'} style={{marginRight: '8px'}}>
+                                            {page.iconContent}
+                                        </span>
+                                    )}
+                                    {page.iconType === 'EXTERNAL' && page.iconContent && (
+                                        <img src={page.iconContent} alt="" style={{width: '20px', marginRight: '8px'}}/>
+                                    )}
+                                    <span className={'ellipsis'}>{page.title}</span>
                                 </Link>
                             }
-                            secondary={page.date}
                         />
                     </ListItem>
                 ))}

@@ -1,0 +1,43 @@
+.content {
+  max-width: 700px;
+  text-align: left;
+  .head {
+    line-height: 1.5;
+    outline: 0;
+    box-sizing: border-box;
+    width: 100%;
+    @include flexCenter(false);
+    padding-bottom: 0.5em;
+    .area-empty {
+      height: 2rem;
+    }
+
+    .title {
+      max-width: 100%;
+      width: 100%;
+      white-space: pre-wrap;
+      word-break: break-word;
+      caret-color: rgb(55, 53, 47);
+      padding: 0.125em;
+      font-weight: 700;
+      line-height: 1.2;
+      font-size: 1.5rem;
+    }
+
+    .writer {
+      width: 100%;
+      padding-right: 1em;
+      display: block;
+      text-align: right;
+    }
+  }
+
+  .cont-board {
+    max-width: 100%;
+    width: 100%;
+    white-space: pre-wrap;
+    word-break: break-word;
+    caret-color: transparent;
+    padding: 0.125em;
+  }
+}

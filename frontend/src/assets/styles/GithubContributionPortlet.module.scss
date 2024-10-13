@@ -1,0 +1,54 @@
+@keyframes fallDown {
+  0% {
+    transform: translateY(-200%) translateX(100%) translateZ(300px);
+    opacity: 0;
+  }
+  60% {
+    transform: translateY(15%) translateX(-10%) translateZ(-40px);
+    opacity: 1;
+  }
+  80% {
+    transform: translateY(-5%) translateX(5%) translateZ(20px);
+  }
+  100% {
+    transform: translateY(0) translateX(0) translateZ(0);
+    opacity: 1;
+  }
+}
+
+.content {
+  @include flexCenter(true);
+  @include full;
+
+  .plate-grid {
+    position: relative;
+    width: 700px;
+    height: 400px;
+    transform: rotateX(0deg) rotateZ(0deg);
+    cursor: pointer;
+
+    .area-grid {
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      grid-template-rows: repeat(6, 1fr);
+      gap: 4px;
+      width: 100%;
+      height: 100%;
+      background-color: white;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      grid-auto-flow: column;
+
+      @for $i from 0 through 54 {
+        .cell-#{$i} {
+          border-radius: 4px;
+          animation: fallDown 1s ease-in-out #{random() * 2}s forwards;
+          opacity: 0;
+        }
+      }
+    }
+    
+  }
+}
+

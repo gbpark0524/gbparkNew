@@ -5,12 +5,13 @@ logging:
   pattern:
     dateformat: YY-MM-dd HH:mm:ss, Asia/Seoul
   level:
+    root: info
     org:
       hibernate:
-        sql: debug
         orm:
           jdbc:
-            bind: trace
+            bind: info
+#        sql: debug
 
 spring:
   mvc:
@@ -25,7 +26,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    open-in-view: false
+  #    show-sql: true
 
   data:
     web:
@@ -41,3 +43,5 @@ spring:
 external-api:
   github:
     token: ${GITHUB_API_TOKEN}
+  notion:
+    token: ${NOTION_API_TOKEN}

@@ -1,32 +1,24 @@
 import React from 'react';
 import {Responsive, WidthProvider} from 'react-grid-layout';
-import {Paper} from '@mui/material';
-import GitHubPortlet from "./portlet/GitHubPortlet";
-import NotionPortlet from "./portlet/NotionPortlet";
+import {Card, Paper} from '@mui/material';
+import NotionPortlet from '@component/portlet/NotionPortlet';
+import GithubContributionPortlet from '@component/portlet/GithubContributionPortlet';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
-import GithubCommit2DGridVisualization from "./portlet/GithubCommit2DGridVisualization";
+import devGbparkImage from '@image/dev-gbpark.webp';
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
 const DraggableGrid = () => {
     const layout = [
-        { i: 'a', x: 0, y: 0, w: 2, h: 7 },
-        { i: 'b', x: 2, y: 0, w: 2, h: 4 },
-        { i: 'c', x: 4, y: 0, w: 2, h: 3 }
-    ];
-
-    const pages = [
-        { title: '프로젝트 기획안', date: '8월 3일', url: 'https://notion.so/page1' },
-        { title: '회의록', date: '8월 1일', url: 'https://notion.so/page2' },
-        { title: '디자인 가이드라인', date: '7월 30일', url: 'https://notion.so/page3' },
-        { title: '주간 리포트', date: '7월 28일', url: 'https://notion.so/page4' },
-        { title: '마케팅 전략', date: '7월 26일', url: 'https://notion.so/page5' }
+        { i: 'notion', x: 0, y: 0, w: 2, h: 3 },
+        { i: 'pic', x: 2, y: 0, w: 2, h: 3 },
+        { i: 'gitHub', x: 0, y: 2, w: 7, h: 4 },
     ];
 
     return (
         <ResponsiveGridLayout
-            className="layout"
+            className='layout'
             layouts={{ lg: layout }}
             breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
             cols={{ lg: 6, md: 4, sm: 2, xs: 1, xxs: 1 }}
@@ -36,14 +28,20 @@ const DraggableGrid = () => {
             isDraggable={false}
             style={{width: '100%'}}
         >
-            <Paper key="a" style={{ padding: 16 }}>
-                <NotionPortlet pages={pages}/>
+            <Paper key='notion' style={{ padding: 16 }}>
+                <NotionPortlet/>
             </Paper>
-            <Paper key="b" style={{ padding: 16, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <GithubCommit2DGridVisualization/>
+            <Paper key='pic' style={{ padding: 16}}>
+                <Card className={'ff'}>
+                        <img
+                            src={devGbparkImage}
+                            loading='lazy'
+                            alt=''
+                        />
+                </Card>
             </Paper>
-            <Paper key="c" style={{ padding: 16 }}>
-                <GitHubPortlet/>
+            <Paper key='gitHub' className={'flex-center'} style={{ padding: 16, overflow:'hidden'}}>
+                <GithubContributionPortlet/>
             </Paper>
         </ResponsiveGridLayout>
     );

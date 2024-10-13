@@ -11,12 +11,12 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import {Adb, Person} from '@mui/icons-material';
+import {Home, Person} from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
 const pages = [
     { name: 'Home', path: '/' },
-    { name: 'Guestbook', path: '/guestbook' }
+    { name: 'Guestbook', path: '/guestbook' },
 ];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
@@ -29,7 +29,7 @@ function ResponsiveAppBar() {
         setAnchorElNav(event.currentTarget);
     };
     const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorElUser(event.currentTarget);
+        // setAnchorElUser(event.currentTarget);
     };
 
     const handleCloseNavMenu = (path: string) => {
@@ -47,16 +47,15 @@ function ResponsiveAppBar() {
         <AppBar position="static">
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
-                    <Adb sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+                    <Home sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
                     <Typography
                         variant="h6"
                         noWrap
                         component="a"
-                        href="#app-bar-with-responsive-menu"
+                        href="/"
                         sx={{
                             mr: 2,
                             display: { xs: 'none', md: 'flex' },
-                            fontFamily: 'monospace',
                             fontWeight: 700,
                             letterSpacing: '.3rem',
                             color: 'inherit',
@@ -102,17 +101,15 @@ function ResponsiveAppBar() {
                             ))}
                         </Menu>
                     </Box>
-                    <Adb sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
                     <Typography
                         variant="h5"
                         noWrap
                         component="a"
-                        href="#app-bar-with-responsive-menu"
+                        href="/"
                         sx={{
                             mr: 2,
                             display: { xs: 'flex', md: 'none' },
                             flexGrow: 1,
-                            fontFamily: 'monospace',
                             fontWeight: 700,
                             letterSpacing: '.3rem',
                             color: 'inherit',

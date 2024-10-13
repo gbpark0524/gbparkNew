@@ -9,20 +9,24 @@ import {
     TableBody,
     TableCell,
     TableContainer,
+    TableFooter,
     TableHead,
+    TablePagination,
     TableRow,
     Typography
 } from '@mui/material';
 import {ArrowDropDown, Create} from '@mui/icons-material';
-import axios, {AxiosResponse} from "axios";
+import axios from "axios";
 import {format, parseISO} from "date-fns";
 import BoardDetail from "@component/BoardDetail";
 import {useNavigate} from 'react-router-dom';
+import TablePaginationActions from "@mui/material/TablePagination/TablePaginationActions";
 
 interface PaginatedResponse {
     page: number;
     size: number;
     totalCount: number;
+    totalPage: number;
     items: RowData[];
 }
 
@@ -45,14 +49,13 @@ const formatDate = (dateString: string): string => {
     return format(date, 'yyyy-MM-dd');
 };
 
-
 const Guestbook = (): React.ReactElement => {
     const navigate = useNavigate();
     const [rows, setRows] = useState<RowData[]>([]);
     const [boardData, setBoardData] = useState<BoardData | null>(null);
-    // const [totalCount, setTotalCount] = useState<number>(0);
-    // const [currentPage, setCurrentPage] = useState<number>(1);
-    // const [pageSize, setPageSize] = useState<number>(10);
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [totalCount, setTotalCount] = useState(0);
 
     const boardClick = (row: RowData) => {
         setBoardData({
@@ -63,25 +66,46 @@ const Guestbook = (): React.ReactElement => {
     };
 
     useEffect(() => {
-        axios.get<PaginatedResponse>('/board/guestbooks')
-            .then((response: AxiosResponse<PaginatedResponse>) => {
-                if (response.data && Array.isArray(response.data.items)) {
-                    const formattedRows = response.data.items.map(row => ({
-                        ...row,
-                        date: formatDate(row.date)
-                    }));
-                    setRows(formattedRows);
-                    // setTotalCount(response.data.totalCount);
-                    // setCurrentPage(response.data.page);
-                    // setPageSize(response.data.size);
-                } else {
-                    console.error('Received data is not in the expected format');
+        let isMounted = true;
+
+        const fetchGuestbooks = async () => {
+            try {
+                const response = await axios.get<PaginatedResponse>(`/board/guestbooks?page=${page + 1}&size=${rowsPerPage}`);
+                if (isMounted) {
+                    if (response.data && Array.isArray(response.data.items)) {
+                        const formattedRows = response.data.items.map(row => ({
+                            ...row,
+                            date: formatDate(row.date)
+                        }));
+                        setRows(formattedRows);
+                        setTotalCount(response.data.totalCount);
+                    } else {
+                        console.error('Received data is not in the expected format');
+                    }
                 }
-            })
-            .catch((error) => {
-                console.error('Error fetching guestbooks:', error);
-            });
-    }, []);
+            } catch (error) {
+                if (isMounted) {
+                    console.error('Error fetching guestbooks:', error);
+                }
+            }
+        };
+
+        fetchGuestbooks().then(() => isMounted = false);
+    }, [page, rowsPerPage]);
+
+    const handleChangePage = (
+        event: React.MouseEvent<HTMLButtonElement> | null,
+        newPage: number,
+    ) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (
+        event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    ) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
 
     return (
         <div>
@@ -109,9 +133,7 @@ const Guestbook = (): React.ReactElement => {
                                     <TableRow
                                         key={row.id}
                                         sx={{'&:last-child td, &:last-child th': {border: 0}, cursor: 'pointer'}}
-                                        onClick={() => {
-                                            boardClick(row)
-                                        }}
+                                        onClick={() => boardClick(row)}
                                     >
                                         <TableCell component="th" scope="row">
                                             {row.id}
@@ -122,16 +144,37 @@ const Guestbook = (): React.ReactElement => {
                                     </TableRow>
                                 ))}
                             </TableBody>
+                            <TableFooter>
+                                <TableRow>
+                                    <TablePagination
+                                        rowsPerPageOptions={[5, 10, 25]}
+                                        colSpan={4}
+                                        count={totalCount}
+                                        rowsPerPage={rowsPerPage}
+                                        page={page}
+                                        slotProps={{
+                                            select: {
+                                                inputProps: {
+                                                    'aria-label': '페이지당 행 수',
+                                                },
+                                                native: true,
+                                            },
+                                        }}
+                                        onPageChange={handleChangePage}
+                                        onRowsPerPageChange={handleChangeRowsPerPage}
+                                        ActionsComponent={TablePaginationActions}
+                                    />
+                                </TableRow>
+                            </TableFooter>
                         </Table>
                     </TableContainer>
                 </AccordionDetails>
             </Accordion>
-            {
-                boardData &&
+            {boardData && (
                 <Paper elevation={1} sx={{p: 3,}}>
                     <BoardDetail board={boardData}/>
                 </Paper>
-            }
+            )}
             <Fab
                 color="primary"
                 aria-label="writing guestboard"

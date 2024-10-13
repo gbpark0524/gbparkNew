@@ -76,7 +76,7 @@
   },
   "overrides": {
     "nth-check": "$nth-check",
-    "postcss": "$postcss"
+    "postcss": "^8.4.40"
   },
   "proxy": "http://localhost:9090"
 }

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 @Getter
@@ -23,7 +24,7 @@ public class GuestBookResponse {
         this.title = guestBook.getTitle();
         this.content = guestBook.isSecret() ? "[비밀글입니다]" : guestBook.getContent();
         this.writer = guestBook.getWriter();
-        this.date = guestBook.getLastModifiedDate().format(DateTimeFormatter.ISO_DATE_TIME);
+        this.date = guestBook.getLastModifiedDate().atZone(ZoneId.of("Asia/Seoul")).format(DateTimeFormatter.ISO_DATE_TIME);
         this.secret = guestBook.isSecret();
     }
 

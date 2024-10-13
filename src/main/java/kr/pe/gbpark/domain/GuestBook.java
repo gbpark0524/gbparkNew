@@ -13,15 +13,13 @@ public class GuestBook extends Board {
     private String writer;
     private String password;
     private String email;
-    private String ip;
 
     @Builder
-    private GuestBook(String title, String content, boolean secret, String writer, String password, String email, String ip) {
+    private GuestBook(String title, String content, boolean secret, String writer, String password, String email) {
         super(title, content, secret);
         this.writer = writer;
         this.password = password;
         this.email = email;
-        this.ip = ip;
     }
 
     public static GuestBookBuilder builder(String title) {
@@ -35,8 +33,6 @@ public class GuestBook extends Board {
         private String writer;
         private String password;
         private String email;
-        private String ip;
-
         GuestBookBuilder() {}
 
         private GuestBookBuilder title(String title) {
@@ -69,13 +65,8 @@ public class GuestBook extends Board {
             return this;
         }
 
-        public GuestBookBuilder ip(String ip) {
-            this.ip = ip;
-            return this;
-        }
-
         public GuestBook build() {
-            return new GuestBook(title, content, secret, writer, password, email, ip);
+            return new GuestBook(title, content, secret, writer, password, email);
         }
     }
 }

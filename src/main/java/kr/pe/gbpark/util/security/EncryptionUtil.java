@@ -1,12 +1,12 @@
-package kr.pe.gbpark.util.service;
+package kr.pe.gbpark.util.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 @RequiredArgsConstructor
-public class SecurityService {
+public class EncryptionUtil {
     private final PasswordEncoder passwordEncoder;
 
     public String encodePassword(String rawPassword) {

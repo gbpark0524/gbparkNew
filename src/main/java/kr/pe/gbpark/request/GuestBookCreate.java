@@ -12,11 +12,10 @@ public class GuestBookCreate {
 
     private String writer;
     @ToString.Exclude
+    @Setter
     private String password;
     private String content;
     private String email;
-    @Setter
-    private String ip;
     @Builder.Default
     private boolean secret = false;
 

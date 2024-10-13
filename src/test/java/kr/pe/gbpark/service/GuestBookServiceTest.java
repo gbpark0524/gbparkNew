@@ -44,13 +44,11 @@ class GuestBookServiceTest {
         final String testPass = "testPass";
         final String testContent = "Test Content";
         final String testMail = "test@email.com";
-        final String testIp = "127.0.0.1";
         GuestBookCreate guestBookCreate = GuestBookCreate.builder(testTitle)
                 .writer(testWriter)
                 .password(testPass)
                 .content(testContent)
                 .email(testMail)
-                .ip(testIp)
                 .build();
 
         // when
@@ -65,7 +63,6 @@ class GuestBookServiceTest {
         assertEquals(testWriter, savedGuestBook.getWriter());
         assertEquals(testContent, savedGuestBook.getContent());
         assertEquals(testMail, savedGuestBook.getEmail());
-        assertEquals(testIp, savedGuestBook.getIp());
         assertFalse(savedGuestBook.isSecret());
     }
 

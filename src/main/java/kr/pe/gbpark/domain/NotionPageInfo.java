@@ -18,13 +18,19 @@ public record NotionPageInfo(String id, String url, String public_url, Icon icon
     public record Icon(
             IconType type,
             String emoji,
+            File file,
             External external
     ) {
         public enum IconType {
             @JsonProperty("emoji")
             EMOJI,
+            @JsonProperty("file")
+            FILE,
             @JsonProperty("external")
             EXTERNAL
+        }
+
+        public record File(String url, String expiry_time) {
         }
 
         public record External(String url) {

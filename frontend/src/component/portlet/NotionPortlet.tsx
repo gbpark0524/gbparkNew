@@ -62,13 +62,15 @@ const NotionPortlet = () => {
                                     className={'flex-center'}
                                     style={{display: 'flex', alignItems: 'center', justifyContent: 'flex-start'}}
                                 >
-                                    {page.iconType === 'EMOJI' && page.iconContent && (
-                                        <span className={'emoji'} style={{marginRight: '8px'}}>
-                                            {page.iconContent}
-                                        </span>
-                                    )}
-                                    {page.iconType === 'EXTERNAL' && page.iconContent && (
-                                        <img src={page.iconContent} alt="" style={{width: '20px', marginRight: '8px'}}/>
+                                    {page.iconContent && (
+                                        page.iconType === 'EMOJI' ? (
+                                            <span className={'emoji'} style={{marginRight: '8px'}}>
+                                                {page.iconContent}
+                                            </span>
+                                        ) : (
+                                            <img src={page.iconContent} alt=""
+                                                 style={{width: '20px', marginRight: '8px'}}/>
+                                        )
                                     )}
                                     <span className={'ellipsis'}>{page.title}</span>
                                 </Link>

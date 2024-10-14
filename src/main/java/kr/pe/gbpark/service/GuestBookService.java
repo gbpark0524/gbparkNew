@@ -26,7 +26,7 @@ public class GuestBookService {
                 GuestBook.builder(guestBookCreate.getTitle())
                         .content(guestBookCreate.getContent())
                         .writer(guestBookCreate.getWriter())
-                        .password( encryptionUtil.encodePassword(guestBookCreate.getPassword()))
+                        .password(encryptionUtil.encodePassword(guestBookCreate.getPassword()))
                         .email(guestBookCreate.getEmail())
                         .secret(guestBookCreate.isSecret())
                         .build();

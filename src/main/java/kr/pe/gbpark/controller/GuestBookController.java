@@ -7,7 +7,6 @@ import kr.pe.gbpark.response.GuestBookResponse;
 import kr.pe.gbpark.response.PaginationResponse;
 import kr.pe.gbpark.response.Response;
 import kr.pe.gbpark.service.GuestBookService;
-import kr.pe.gbpark.util.security.EncryptionUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +27,6 @@ import static kr.pe.gbpark.response.Response.SUCCESS_MESSAGE;
 public class GuestBookController {
 
     private final GuestBookService guestBookService;
-    private final EncryptionUtil encryptionUtil;
 
     @PostMapping("/board/guestbook")
     public void postGuestBook(@RequestBody @Valid GuestBookCreate request) {

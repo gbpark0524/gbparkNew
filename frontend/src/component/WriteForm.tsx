@@ -40,6 +40,7 @@ const WriteForm = ({onSubmit, onCancel, initialData = {}}: WriteFormProps) => {
 
     const [showPassword, setShowPassword] = useState(false);
     const [titleError, setTitleError] = useState(false);
+    const [writerError, setWriterError] = useState(false);
     const [passError, setPassError] = useState(false);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,7 +65,7 @@ const WriteForm = ({onSubmit, onCancel, initialData = {}}: WriteFormProps) => {
     
     const validate = () => {
         // All validations must pass
-        const validateAllRequired = [validateTitle,validatePassword];
+        const validateAllRequired = [validateTitle, validatePassword, validateWriter];
         // optional validations
         // const validateAnyOptional = [];
         
@@ -84,6 +85,12 @@ const WriteForm = ({onSubmit, onCancel, initialData = {}}: WriteFormProps) => {
         }
     };
 
+    const validateWriter = () => {
+        const validate : boolean = !!formData.writer.trim();
+        setWriterError(!validate);
+        return validate;
+    };
+    
     const validatePassword = () => {
         if (formData.password.trim()) {
             setPassError(false);
@@ -133,12 +140,15 @@ const WriteForm = ({onSubmit, onCancel, initialData = {}}: WriteFormProps) => {
                     <Grid item xs={8}>
                         <TextField
                             margin="normal"
+                            required
                             fullWidth
                             id="writer"
                             label="작성자"
                             name="writer"
                             value={formData.writer}
                             onChange={handleChange}
+                            error={writerError}
+                            helperText={writerError ? '필수 입력입니다' : ''}
                         />
                     </Grid>
                     <Grid item xs={4}>
@@ -154,7 +164,7 @@ const WriteForm = ({onSubmit, onCancel, initialData = {}}: WriteFormProps) => {
                             value={formData.password}
                             onChange={handleChange}
                             error={passError}
-                            helperText={passError ? '필수 입력입니다' : ''}
+                            helperText={passError ? '글 수정/삭제시 사용 됩니다' : ''}
                             InputProps={{
                                 endAdornment: (
                                     <InputAdornment position="end">

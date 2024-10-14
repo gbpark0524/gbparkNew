@@ -1,27 +1,23 @@
 package kr.pe.gbpark.util.entity;
 
-import jakarta.persistence.Convert;
-import kr.pe.gbpark.util.converter.UTCLocalDateTimeConverter;
-import lombok.Getter;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
-import java.time.LocalDateTime;
+import lombok.Getter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.ZonedDateTime;
 
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
 @Getter
 public class BaseTimeEntity {
-    @CreatedDate
+    @CreationTimestamp
     @Column(updatable = false)
-    @Convert(converter = UTCLocalDateTimeConverter.class)
-    private LocalDateTime createDate;
+    private ZonedDateTime createDate;
 
-    @LastModifiedDate
-    @Convert(converter = UTCLocalDateTimeConverter.class)
-    private LocalDateTime lastModifiedDate;
+    @UpdateTimestamp
+    private ZonedDateTime lastModifiedDate;
 }

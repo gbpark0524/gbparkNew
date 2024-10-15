@@ -77,7 +77,7 @@ const Guestbook = (): React.ReactElement => {
 
         const fetchGuestbooks = async () => {
             try {
-                const response = await axios.get<PaginatedResponse>(`/board/guestbooks?page=${page + 1}&size=${rowsPerPage}`);
+                const response = await axios.get<PaginatedResponse>(`/board/guestbook?page=${page + 1}&size=${rowsPerPage}`);
                 if (isMounted) {
                     if (response.data && Array.isArray(response.data.items)) {
                         const formattedRows = response.data.items.map(row => ({

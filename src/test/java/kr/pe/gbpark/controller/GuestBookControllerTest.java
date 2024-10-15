@@ -128,7 +128,7 @@ class GuestBookControllerTest {
         guestBookRepository.saveAll(guestBooks);
 
         // expected
-        mockMvc.perform(get("/board/guestbooks?page=1&size=10")
+        mockMvc.perform(get("/board/guestbook?page=1&size=10")
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.items.length()", is(10)))

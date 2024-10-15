@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
@@ -24,16 +25,17 @@ import static kr.pe.gbpark.response.Response.SUCCESS_MESSAGE;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/board/guestbook")
 public class GuestBookController {
 
     private final GuestBookService guestBookService;
 
-    @PostMapping("/board/guestbook")
+    @PostMapping("")
     public void postGuestBook(@RequestBody @Valid GuestBookCreate request) {
         guestBookService.write(request);
     }
 
-    @GetMapping("/board/guestbook/{guestBookId}")
+    @GetMapping("/{guestBookId}")
     public Response<?> getGuestBook(@PathVariable(name = "guestBookId") Long id) {
         Optional<GuestBookResponse> guestBookResponse = guestBookService.get(id);
         if (guestBookResponse.isPresent()) {
@@ -43,7 +45,7 @@ public class GuestBookController {
         }
     }
 
-    @GetMapping("/board/guestbooks")
+    @GetMapping("")
     public PaginationResponse<GuestBookResponse> getPaginationGuestBook(@ModelAttribute GuestBookSearch guestBookSearch) {
         return guestBookService.getList(guestBookSearch);
     }

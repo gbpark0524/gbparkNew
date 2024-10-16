@@ -1,6 +1,8 @@
 package kr.pe.gbpark.service;
 
 import kr.pe.gbpark.domain.GuestBook;
+import kr.pe.gbpark.exception.InvalidPassword;
+import kr.pe.gbpark.exception.NotFound;
 import kr.pe.gbpark.repository.GuestBookRepository;
 import kr.pe.gbpark.request.GuestBookCreate;
 import kr.pe.gbpark.request.GuestBookSearch;
@@ -43,5 +45,20 @@ public class GuestBookService {
         Page<GuestBook> guestBookPage = guestBookRepository.getList(guestBookSearch);
         PaginationResponse<GuestBookResponse> paginationResponse = new PaginationResponse<>(guestBookPage, GuestBookResponse.class);
         return paginationResponse;
+    }
+
+    public void deleteGuestbook(Long id, String password) {
+        Optional<GuestBook> byId = guestBookRepository.findById(id);
+        if (byId.isPresent()) {
+            GuestBook guestBook = byId.get();
+            boolean matched = encryptionUtil.matchPassword(password, guestBook.getPassword());
+            if (matched) {
+                guestBookRepository.delete(guestBook);
+            } else {
+                throw new InvalidPassword();
+            }
+        } else {
+            throw new NotFound();
+        }
     }
 }

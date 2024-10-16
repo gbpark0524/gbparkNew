@@ -2,11 +2,14 @@ package kr.pe.gbpark.service;
 
 import jakarta.transaction.Transactional;
 import kr.pe.gbpark.domain.GuestBook;
+import kr.pe.gbpark.exception.InvalidPassword;
+import kr.pe.gbpark.exception.NotFound;
 import kr.pe.gbpark.repository.GuestBookRepository;
 import kr.pe.gbpark.request.GuestBookCreate;
 import kr.pe.gbpark.request.GuestBookSearch;
 import kr.pe.gbpark.response.GuestBookResponse;
 import kr.pe.gbpark.response.PaginationResponse;
+import kr.pe.gbpark.util.security.EncryptionUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,7 +22,11 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @Transactional
@@ -29,6 +36,9 @@ class GuestBookServiceTest {
 
     @Autowired
     GuestBookRepository guestBookRepository;
+
+    @Autowired
+    EncryptionUtil encryptionUtil;
 
     @BeforeEach
     void setUp() {
@@ -148,4 +158,56 @@ class GuestBookServiceTest {
         assertEquals(guestBookSearch.getDefaultPage(), (int) guestBookResponsePaginationResponse.getPage());
     }
 
+
+    @Test
+    @DisplayName("deleteGuestBook: 게시물 삭제 성공")
+    void deleteGuestbook() {
+        // Given
+        String correctPassword = "password123";
+        GuestBook guestBook = GuestBook.builder("title")
+                .writer("me")
+                .password(encryptionUtil.encodePassword(correctPassword))
+                .build();
+        guestBookRepository.save(guestBook);
+        Long id = guestBook.getId();
+
+        //when
+        guestBookService.deleteGuestbook(id, correctPassword);
+
+        //then
+        assertEquals(0L, guestBookRepository.count());
+    }
+
+    @Test
+    @DisplayName("deleteGuestBook: 잘못된 비밀번호 삭제 예외")
+    void deleteGuestbook_wrongPassword() {
+        // Given
+        String correctPassword = "password123";
+        String wrongPassword = correctPassword + "1";
+        GuestBook guestBook = GuestBook.builder("title")
+                .writer("me")
+                .password(encryptionUtil.encodePassword(correctPassword))
+                .build();
+        guestBookRepository.save(guestBook);
+        Long id = guestBook.getId();
+
+        //when then
+        assertThrows(InvalidPassword.class, () -> guestBookService.deleteGuestbook(id, wrongPassword));
+    }
+
+    @Test
+    @DisplayName("deleteGuestBook: 존재하지 않는 ID로 삭제 시도 시 예외")
+    void deleteGuestbook_wrongId() {
+        // Given
+        String correctPassword = "password123";
+        GuestBook guestBook = GuestBook.builder("title")
+                .writer("me")
+                .password(encryptionUtil.encodePassword(correctPassword))
+                .build();
+        guestBookRepository.save(guestBook);
+        Long id = guestBook.getId();
+
+        //when then
+        assertThrows(NotFound.class, () -> guestBookService.deleteGuestbook(id + 1, correctPassword));
+    }
 }

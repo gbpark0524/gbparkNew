@@ -7,6 +7,7 @@ import kr.pe.gbpark.repository.GuestBookRepository;
 import kr.pe.gbpark.request.GuestBookCreate;
 import kr.pe.gbpark.response.GuestBookResponse;
 import kr.pe.gbpark.response.Response;
+import kr.pe.gbpark.util.security.EncryptionUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,7 @@ import java.util.stream.IntStream;
 
 import static org.hamcrest.Matchers.is;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -39,6 +41,9 @@ class GuestBookControllerTest {
 
     @Autowired
     private GuestBookRepository guestBookRepository;
+    
+    @Autowired
+    private EncryptionUtil encryptionUtil;
 
     @BeforeEach
     void setUp() {
@@ -134,6 +139,81 @@ class GuestBookControllerTest {
                 .andExpect(jsonPath("$.items.length()", is(10)))
                 .andExpect(jsonPath("$.items[0].title").value("foo19"))
                 .andExpect(jsonPath("$.items[0].content").value("bar19"))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("방명록 삭제 - 정상 케이스")
+    void deleteGuestBookTest() throws Exception {
+        // given
+        String password = "testPassword";
+        GuestBook guestBook = GuestBook.builder("삭제 테스트")
+                .content("삭제될 내용")
+                .writer("작성자")
+                .password(encryptionUtil.encodePassword(password))
+                .build();
+        guestBookRepository.save(guestBook);
+
+        // expected
+        mockMvc.perform(delete("/board/guestbook/" + guestBook.getId())
+                        .header("Board-Password", password)
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("방명록 삭제 - 잘못된 비밀번호")
+    void deleteGuestBookInvalidPassword() throws Exception {
+        // given
+        String password = "testPassword";
+        String wrongPassword = "wrongPassword";
+        GuestBook guestBook = GuestBook.builder("삭제 테스트")
+                .content("삭제될 내용")
+                .writer("작성자")
+                .password(encryptionUtil.encodePassword(password))
+                .build();
+        guestBookRepository.save(guestBook);
+
+        // expected
+        mockMvc.perform(delete("/board/guestbook/" + guestBook.getId())
+                        .header("Board-Password", wrongPassword)
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.message").value("wrong password"))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("방명록 삭제 - 존재하지 않는 게시글")
+    void deleteGuestBookNotFound() throws Exception {
+        // given
+        Long nonExistentId = 999L;
+
+        // expected
+        mockMvc.perform(delete("/board/guestbook/" + nonExistentId)
+                        .header("Board-Password", "anyPassword")
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("대상이 존재하지 않습니다"))
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("방명록 삭제 - 비밀번호 누락")
+    void deleteGuestBookMissingPassword() throws Exception {
+        // given
+        GuestBook guestBook = GuestBook.builder("삭제 테스트")
+                .content("삭제될 내용")
+                .writer("작성자")
+                .password("password")
+                .build();
+        guestBookRepository.save(guestBook);
+
+        // expected
+        mockMvc.perform(delete("/board/guestbook/" + guestBook.getId())
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isInternalServerError())
                 .andDo(print());
     }
 }

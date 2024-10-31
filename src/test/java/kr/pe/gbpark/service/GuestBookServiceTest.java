@@ -161,7 +161,7 @@ class GuestBookServiceTest {
 
     @Test
     @DisplayName("deleteGuestBook: 게시물 삭제 성공")
-    void deleteGuestbook() {
+    void deleteGuestBook() {
         // Given
         String correctPassword = "password123";
         GuestBook guestBook = GuestBook.builder("title")
@@ -172,7 +172,7 @@ class GuestBookServiceTest {
         Long id = guestBook.getId();
 
         //when
-        guestBookService.deleteGuestbook(id, correctPassword);
+        guestBookService.deleteGuestBook(id, correctPassword);
 
         //then
         assertEquals(0L, guestBookRepository.count());
@@ -180,7 +180,7 @@ class GuestBookServiceTest {
 
     @Test
     @DisplayName("deleteGuestBook: 잘못된 비밀번호 삭제 예외")
-    void deleteGuestbook_wrongPassword() {
+    void deleteGuestBook_wrongPassword() {
         // Given
         String correctPassword = "password123";
         String wrongPassword = correctPassword + "1";
@@ -192,12 +192,12 @@ class GuestBookServiceTest {
         Long id = guestBook.getId();
 
         //when then
-        assertThrows(InvalidPassword.class, () -> guestBookService.deleteGuestbook(id, wrongPassword));
+        assertThrows(InvalidPassword.class, () -> guestBookService.deleteGuestBook(id, wrongPassword));
     }
 
     @Test
     @DisplayName("deleteGuestBook: 존재하지 않는 ID로 삭제 시도 시 예외")
-    void deleteGuestbook_wrongId() {
+    void deleteGuestBook_wrongId() {
         // Given
         String correctPassword = "password123";
         GuestBook guestBook = GuestBook.builder("title")
@@ -208,6 +208,6 @@ class GuestBookServiceTest {
         Long id = guestBook.getId();
 
         //when then
-        assertThrows(NotFound.class, () -> guestBookService.deleteGuestbook(id + 1, correctPassword));
+        assertThrows(NotFound.class, () -> guestBookService.deleteGuestBook(id + 1, correctPassword));
     }
 }

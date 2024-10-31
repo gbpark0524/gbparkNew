@@ -47,7 +47,7 @@ public class GuestBookService {
         return paginationResponse;
     }
 
-    public void deleteGuestbook(Long id, String password) {
+    public void deleteGuestBook(Long id, String password) {
         Optional<GuestBook> byId = guestBookRepository.findById(id);
         if (byId.isPresent()) {
             GuestBook guestBook = byId.get();

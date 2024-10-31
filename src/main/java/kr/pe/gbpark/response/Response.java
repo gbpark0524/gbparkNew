@@ -8,6 +8,5 @@ package kr.pe.gbpark.response;
  */
 public record Response<T>(boolean success, String message, T data) {
     public static final String SUCCESS_MESSAGE = "Request succeeded";
-
     public static final String EMPTY_MESSAGE = "No results found";
 }

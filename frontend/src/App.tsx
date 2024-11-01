@@ -28,6 +28,7 @@ function App() {
                     <Route path="/" element={<Main/>}/>
                     <Route path="/guestbook" element={<Guestbook/>}/>
                     <Route path="/guestbook/write" element={<FormGuestbook/>}/>
+                    <Route path="/test" element={<Main/>}/>
                     <Route path="/*" element={<Main/>}/>
                 </Routes>
             </div>

@@ -69,7 +69,11 @@ const Guestbook = (): React.ReactElement => {
             });
             setSelectedId(row.id);
         }
+    };
 
+    const deselectBoard = () => {
+        setBoardData(null);
+        setSelectedId(null);  // 선택된 셀 제거
     };
 
     useEffect(() => {
@@ -189,9 +193,7 @@ const Guestbook = (): React.ReactElement => {
                 </AccordionDetails>
             </Accordion>
             {boardData && (
-                <Paper elevation={1} sx={{p: 3,}}>
-                    <BoardDetail board={boardData}/>
-                </Paper>
+                <BoardDetail board={boardData} onClose={deselectBoard}/>
             )}
             <Fab
                 color="primary"

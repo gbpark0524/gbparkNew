@@ -8,8 +8,10 @@
     width: 100%;
     @include flexCenter(false);
     padding-bottom: 0.5em;
-    .area-empty {
+    .area-close {
       height: 2rem;
+      text-align: right;
+      @include full;
     }
 
     .title {

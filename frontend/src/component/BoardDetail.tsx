@@ -80,7 +80,7 @@ const BoardDetail = ({board, onClose}: BoardDetailProps) => {
                         </Stack>
                     </Stack>
                     <Dialog
-                        open={pwModal != CLOSE}
+                        open={pwModal !== CLOSE}
                         onClose={pwClose}
                         PaperProps={{
                             component: 'form',
@@ -111,9 +111,9 @@ const BoardDetail = ({board, onClose}: BoardDetailProps) => {
                             />
                         </DialogContent>
                         <DialogActions>
-                            {pwModal == DELETE &&
+                            {pwModal === DELETE &&
                                 <Button variant={"contained"} color={"error"} onClick={pwClose}>DELETE</Button>}
-                            {pwModal == MODIFY &&
+                            {pwModal === MODIFY &&
                                 <Button variant={"contained"} color={"info"} onClick={pwClose}>MODIFY</Button>}
                             <Button variant={"outlined"} color={"secondary"} onClick={pwClose}>NO</Button>
                         </DialogActions>

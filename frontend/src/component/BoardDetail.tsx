@@ -13,6 +13,14 @@ import {
 import {Delete, Edit, Close} from '@mui/icons-material';
 import IconButton from "@mui/material/IconButton";
 
+const ModalState = {
+    CLOSE: 'CLOSE',
+    MODIFY: 'MODIFY',
+    DELETE: 'DELETE'
+} as const;
+
+type ModalStateType = typeof ModalState[keyof typeof ModalState];
+
 interface BoardDetailProps {
     board: {
         title: string,
@@ -23,27 +31,34 @@ interface BoardDetailProps {
 }
 
 const BoardDetail = ({board, onClose}: BoardDetailProps) => {
-    const CLOSE = 0;
-    const MODIFY = 1;
-    const DELETE = 2;
-    const [pwModal, setPwModal] = useState(CLOSE);
+    const [pwModal, setPwModal] = useState<ModalStateType>(ModalState.CLOSE);
     const [detailState, setDetailState] = useState(true);
-    
+
     const closeDetail = () => {
         setDetailState(false);
         onClose();
     }
 
     const delOpen = () => {
-        setPwModal(DELETE);
+        setPwModal(ModalState.DELETE);
     };
 
     const modOpen = () => {
-        setPwModal(MODIFY);
+        setPwModal(ModalState.MODIFY);
     };
 
     const pwClose = () => {
-        setPwModal(CLOSE);
+        setPwModal(ModalState.CLOSE);
+    };
+
+    const modalButtons = {
+        [ModalState.DELETE]: (
+            <Button variant={"contained"} color={"error"} onClick={pwClose}>DELETE</Button>
+        ),
+        [ModalState.MODIFY]: (
+            <Button variant={"contained"} color={"info"} onClick={pwClose}>MODIFY</Button>
+        ),
+        [ModalState.CLOSE]: null
     };
 
     return (
@@ -80,7 +95,7 @@ const BoardDetail = ({board, onClose}: BoardDetailProps) => {
                         </Stack>
                     </Stack>
                     <Dialog
-                        open={pwModal !== CLOSE}
+                        open={pwModal !== ModalState.CLOSE}
                         onClose={pwClose}
                         PaperProps={{
                             component: 'form',
@@ -111,13 +126,10 @@ const BoardDetail = ({board, onClose}: BoardDetailProps) => {
                             />
                         </DialogContent>
                         <DialogActions>
-                            {pwModal === DELETE &&
-                                <Button variant={"contained"} color={"error"} onClick={pwClose}>DELETE</Button>}
-                            {pwModal === MODIFY &&
-                                <Button variant={"contained"} color={"info"} onClick={pwClose}>MODIFY</Button>}
-                            <Button variant={"outlined"} color={"secondary"} onClick={pwClose}>NO</Button>
-                        </DialogActions>
-                    </Dialog>
+                            {modalButtons[pwModal]}
+                        <Button variant={"outlined"} color={"secondary"} onClick={pwClose}>NO</Button>
+                    </DialogActions>
+                </Dialog>
                 </Paper>}
         </div>
     );

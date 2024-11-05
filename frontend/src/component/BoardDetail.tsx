@@ -12,6 +12,7 @@ import {
 } from '@mui/material';
 import {Delete, Edit, Close} from '@mui/icons-material';
 import IconButton from "@mui/material/IconButton";
+import axios from "axios";
 
 const ModalState = {
     CLOSE: 'CLOSE',
@@ -50,6 +51,16 @@ const BoardDetail = ({board, onClose}: BoardDetailProps) => {
     const pwClose = () => {
         setPwModal(ModalState.CLOSE);
     };
+    
+    const deleteBoard = (id: string) => {
+        const fetchDelete = async () => {
+            try {
+                const response = await axios.delete(`/board/guestbook/` + id);
+            } catch (error) {
+                console.error('Error fetching guestbooks:', error);
+            }
+        };
+    }
 
     const modalButtons = {
         [ModalState.DELETE]: (
@@ -101,10 +112,6 @@ const BoardDetail = ({board, onClose}: BoardDetailProps) => {
                             component: 'form',
                             onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
                                 event.preventDefault();
-                                const formData = new FormData(event.currentTarget);
-                                const formJson = Object.fromEntries((formData as any).entries());
-                                const email = formJson.email;
-                                console.log(email);
                                 pwClose();
                             },
                         }}

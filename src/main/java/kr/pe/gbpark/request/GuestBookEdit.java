@@ -1,29 +1,22 @@
 package kr.pe.gbpark.request;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.ToString;
 
 @Getter
-@ToString
 @Builder
-public class GuestBookCreate {
+@ToString
+public class GuestBookEdit {
     @NotBlank(message = "title is mandatory")
     private final String title;
-    
     @NotBlank(message = "writer is mandatory")
     private final String writer;
-    
     @ToString.Exclude
     @NotBlank(message = "password is mandatory")
     private final String password;
-    
     private final String content;
     private final String email;
-    
-    @Builder.Default
-    private boolean secret = false;
-
-    public static GuestBookCreateBuilder builder(String title, String writer, String password) {
-        return new GuestBookCreateBuilder().title(title).writer(writer).password(password);
-    }
+    private final boolean secret;
 }

@@ -5,6 +5,7 @@ import kr.pe.gbpark.exception.InvalidPassword;
 import kr.pe.gbpark.exception.NotFound;
 import kr.pe.gbpark.repository.GuestBookRepository;
 import kr.pe.gbpark.request.GuestBookCreate;
+import kr.pe.gbpark.request.GuestBookEdit;
 import kr.pe.gbpark.request.GuestBookSearch;
 import kr.pe.gbpark.response.GuestBookResponse;
 import kr.pe.gbpark.response.PaginationResponse;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -43,8 +45,20 @@ public class GuestBookService {
 
     public PaginationResponse<GuestBookResponse> getList(GuestBookSearch guestBookSearch) {
         Page<GuestBook> guestBookPage = guestBookRepository.getList(guestBookSearch);
-        PaginationResponse<GuestBookResponse> paginationResponse = new PaginationResponse<>(guestBookPage, GuestBookResponse.class);
-        return paginationResponse;
+        return new PaginationResponse<>(guestBookPage, GuestBookResponse.class);
+    }
+
+    @Transactional
+    public void edit(Long id, GuestBookEdit guestBookEdit) {
+        GuestBook guestBook = guestBookRepository.findById(id)
+                .orElseThrow(NotFound::new);
+
+        if (!encryptionUtil.matchPassword(guestBook.getPassword(), guestBook.getPassword())) {
+            throw new InvalidPassword();
+        }
+        
+        guestBook.edit(guestBookEdit);
+        guestBookRepository.save(guestBook);
     }
 
     public void deleteGuestBook(Long id, String password) {

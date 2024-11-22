@@ -22,11 +22,11 @@ public class Board extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;
-    private boolean secret;
+    protected String title;
+    protected boolean secret;
 
     @Lob
-    private String content;
+    protected String content;
 
     protected Board(String title, String content, boolean secret) {
         this.title = title;

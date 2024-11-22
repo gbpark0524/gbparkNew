@@ -1,6 +1,7 @@
 package kr.pe.gbpark.domain;
 
 import jakarta.persistence.Entity;
+import kr.pe.gbpark.request.GuestBookEdit;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,6 +21,14 @@ public class GuestBook extends Board {
         this.writer = writer;
         this.password = password;
         this.email = email;
+    }
+
+    public void edit(GuestBookEdit edit) {
+        super.title = edit.getTitle();
+        writer = edit.getWriter();
+        super.content = edit.getContent();
+        email = edit.getEmail();
+        secret = edit.isSecret();
     }
 
     public static GuestBookBuilder builder(String title) {

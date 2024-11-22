@@ -54,9 +54,7 @@ class GuestBookServiceTest {
         final String testPass = "testPass";
         final String testContent = "Test Content";
         final String testMail = "test@email.com";
-        GuestBookCreate guestBookCreate = GuestBookCreate.builder(testTitle)
-                .writer(testWriter)
-                .password(testPass)
+        GuestBookCreate guestBookCreate = GuestBookCreate.builder(testTitle, testWriter, testPass)
                 .content(testContent)
                 .email(testMail)
                 .build();

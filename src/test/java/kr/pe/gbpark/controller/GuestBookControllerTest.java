@@ -55,9 +55,7 @@ class GuestBookControllerTest {
     @DisplayName("/guestbook insert test")
     void postGuestBook() throws Exception {
         // given
-        GuestBookCreate guestBookCreate = GuestBookCreate.builder("postGuestBookTest")
-                .writer("gbpark")
-                .password("pass")
+        GuestBookCreate guestBookCreate = GuestBookCreate.builder("postGuestBookTest", "gbpark", "pass")
                 .content("postGuestBookTestContent")
                 .email("gbpark@mail.com")
                 .build();
@@ -77,9 +75,7 @@ class GuestBookControllerTest {
     @DisplayName("/guestbook validation test")
     void postGuestBookValidTitleTest() throws Exception {
         // given
-        GuestBookCreate guestBookCreate = GuestBookCreate.builder("")
-                .writer("gbpark")
-                .password("pass")
+        GuestBookCreate guestBookCreate = GuestBookCreate.builder("", "gbpark", "pass")
                 .content("postGuestBookTestContent")
                 .email("gbpark@mail.com")
                 .build();

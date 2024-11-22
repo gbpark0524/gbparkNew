@@ -11,21 +11,20 @@ public class GuestBookCreate {
     private final String title;
     
     @NotBlank(message = "writer is mandatory")
-    private String writer;
+    private final String writer;
     
     @ToString.Exclude
-    @Setter
     @NotBlank(message = "password is mandatory")
-    private String password;
+    private final String password;
     
-    private String content;
-    private String email;
+    private final String content;
+    private final String email;
     
     @Builder.Default
     private boolean secret = false;
 
     @Builder
-    public static GuestBookCreateBuilder builder(String title) {
-        return new GuestBookCreateBuilder().title(title);
+    public static GuestBookCreateBuilder builder(String title, String writer, String password) {
+        return new GuestBookCreateBuilder().title(title).writer(writer).password(password);
     }
 }

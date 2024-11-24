@@ -6,6 +6,7 @@ import kr.pe.gbpark.exception.InvalidPassword;
 import kr.pe.gbpark.exception.NotFound;
 import kr.pe.gbpark.repository.GuestBookRepository;
 import kr.pe.gbpark.request.GuestBookCreate;
+import kr.pe.gbpark.request.GuestBookEdit;
 import kr.pe.gbpark.request.GuestBookSearch;
 import kr.pe.gbpark.response.GuestBookResponse;
 import kr.pe.gbpark.response.PaginationResponse;
@@ -207,5 +208,84 @@ class GuestBookServiceTest {
 
         //when then
         assertThrows(NotFound.class, () -> guestBookService.deleteGuestBook(id + 1, correctPassword));
+    }
+
+    @DisplayName("방명록 수정")
+    @Test
+    void editGuestBook() {
+        // given
+        String pass = "pass";
+        GuestBook guestBook = GuestBook.builder("기존 제목")
+                .content("기존 내용")
+                .writer("기존 작성자")
+                .password(encryptionUtil.encodePassword(pass))
+                .email("old@email.com")
+                .build();
+
+        guestBookRepository.save(guestBook);
+
+        String title = "수정된 제목";
+        String content = "수정된 내용";
+        String writer = "수정된 작성자";
+        String mail = "new@email.com";
+        GuestBookEdit guestBookEdit = GuestBookEdit.builder()
+                .title(title)
+                .content(content)
+                .password(pass)
+                .writer(writer)
+                .email(mail)
+                .build();
+
+        // when
+        guestBookService.edit(guestBook.getId(), guestBookEdit);
+
+        // then
+        GuestBook changedGuestBook = guestBookRepository.findById(guestBook.getId())
+                .orElseThrow(NotFound::new);
+
+        assertThat(changedGuestBook.getTitle()).isEqualTo(title);
+        assertThat(changedGuestBook.getContent()).isEqualTo(content);
+        assertThat(changedGuestBook.getWriter()).isEqualTo(writer); // 수정되지 않은 필드는 유지
+        assertThat(changedGuestBook.getEmail()).isEqualTo(mail); // 수정되지 않은 필드는 유지
+    }
+
+    @DisplayName("존재하지 않는 방명록 수정")
+    @Test
+    void editNotFoundGuestBook() {
+        // given
+        GuestBookEdit guestBookEdit = GuestBookEdit.builder()
+                .title("수정된 제목")
+                .content("수정된 내용")
+                .password("pass")
+                .build();
+
+        // expected
+        assertThrows(NotFound.class, () -> {
+            guestBookService.edit(999L, guestBookEdit);
+        });
+    }
+
+    @DisplayName("잘못된 비밀번호로 방명록 수정")
+    @Test
+    void editGuestBookWithWrongPassword() {
+        // given
+        GuestBook guestBook = GuestBook.builder("제목")
+                .content("내용")
+                .writer("작성자")
+                .password(encryptionUtil.encodePassword("pass"))
+                .build();
+
+        guestBookRepository.save(guestBook);
+
+        GuestBookEdit guestBookEdit = GuestBookEdit.builder()
+                .title("수정된 제목")
+                .content("수정된 내용")
+                .password("wrongpass")
+                .build();
+
+        // expected
+        assertThrows(InvalidPassword.class, () -> {
+            guestBookService.edit(guestBook.getId(), guestBookEdit);
+        });
     }
 }

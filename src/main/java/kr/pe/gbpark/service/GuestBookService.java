@@ -53,7 +53,7 @@ public class GuestBookService {
         GuestBook guestBook = guestBookRepository.findById(id)
                 .orElseThrow(NotFound::new);
 
-        if (!encryptionUtil.matchPassword(guestBook.getPassword(), guestBook.getPassword())) {
+        if (!encryptionUtil.matchPassword(guestBookEdit.getPassword(), guestBook.getPassword())) {
             throw new InvalidPassword();
         }
         

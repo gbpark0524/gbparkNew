@@ -41,6 +41,7 @@ interface RowData {
 }
 
 interface BoardData {
+    id: number,
     title: string,
     writer: string,
     content: string,
@@ -63,6 +64,7 @@ const Guestbook = (): React.ReactElement => {
     const boardClick = (row: RowData) => {
         if (!row.secret) {
             setBoardData({
+                id: row.id,
                 title: row.title,
                 writer: row.writer,
                 content: row.content

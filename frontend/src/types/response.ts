@@ -4,8 +4,8 @@ export interface ApiResponse<T = any> {
     data?: T;
 }
 
-export interface ErrorResponse<T = any> {
-    code?: number;
+export interface ErrorResponse {
+    code: number;
     message: string;
-    target?: Record<string, any>;
+    target: Record<string, any>;
 }

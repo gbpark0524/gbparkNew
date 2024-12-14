@@ -1,18 +1,26 @@
-import axios, {AxiosError, AxiosResponse} from 'axios';
-import { ApiResponse, ErrorResponse } from '@/types/response';
+import axios, {AxiosError} from 'axios';
+import {ErrorResponse } from '@/types/response';
 
-const instance = axios.create();
+const instance = axios.create({
+    timeout: 5000,
+});
 
 instance.interceptors.response.use(
     (response) => response,
     (error: AxiosError<ErrorResponse>) => {
-        const errorData = error.response?.data;
-        const errorMessage = errorData?.message || '알 수 없는 에러가 발생했습니다.';
+        const errorResponse = error.response?.data;
+
+        if (errorResponse) {
+            return Promise.reject({
+                ...errorResponse,
+                message: errorResponse.message || '알 수 없는 에러가 발생했습니다.'
+            });
+        }
 
         return Promise.reject({
-            message: errorMessage,
-            code: errorData?.code,
-            target: errorData?.target
+            code: error.code || 500,
+            message: error.message || '서버와 통신할 수 없습니다.',
+            target: {}
         });
     }
 );

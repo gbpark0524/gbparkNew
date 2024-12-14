@@ -11,8 +11,9 @@ import {
     TextField
 } from '@mui/material';
 import {Delete, Edit, Close} from '@mui/icons-material';
-import IconButton from "@mui/material/IconButton";
-import axios from "axios";
+import IconButton from '@mui/material/IconButton';
+import {ApiResponse, ErrorResponse} from "@/types/response";
+import instance from "@/service/axios";
 
 const ModalState = {
     CLOSE: 'CLOSE',
@@ -24,6 +25,7 @@ type ModalStateType = typeof ModalState[keyof typeof ModalState];
 
 interface BoardDetailProps {
     board: {
+        id: number,
         title: string,
         writer: string,
         content: string,
@@ -52,19 +54,39 @@ const BoardDetail = ({board, onClose}: BoardDetailProps) => {
         setPwModal(ModalState.CLOSE);
     };
     
-    const deleteBoard = (id: string) => {
+    const deleteBoard = () => {
+        let isMounted = true;
+        const pass = document.getElementById('modalPassword') as HTMLInputElement;
+        
+        if (!pass) return;
+        
         const fetchDelete = async () => {
             try {
-                const response = await axios.delete(`/board/guestbook/` + id);
-            } catch (error) {
-                console.error('Error fetching guestbooks:', error);
+                const response = await instance.delete<ApiResponse>(
+                    `/board/guestbook/` + board.id,
+                    {
+                        headers: {
+                            'Board-Password': btoa(pass.value)
+                        }
+                    });
+                if (isMounted) {
+                    if (response.data.success) {
+                        alert(response.data.message);
+                    }
+                }
+            } catch (error: unknown) {
+                const e = error as ErrorResponse;
+                alert(e.message);
             }
-        };
+        }
+
+        
+        fetchDelete().then(() => isMounted = false);
     }
 
     const modalButtons = {
         [ModalState.DELETE]: (
-            <Button variant={"contained"} color={"error"} onClick={pwClose}>DELETE</Button>
+            <Button variant={"contained"} color={"error"} onClick={deleteBoard}>DELETE</Button>
         ),
         [ModalState.MODIFY]: (
             <Button variant={"contained"} color={"info"} onClick={pwClose}>MODIFY</Button>
@@ -108,13 +130,6 @@ const BoardDetail = ({board, onClose}: BoardDetailProps) => {
                     <Dialog
                         open={pwModal !== ModalState.CLOSE}
                         onClose={pwClose}
-                        PaperProps={{
-                            component: 'form',
-                            onSubmit: (event: React.FormEvent<HTMLFormElement>) => {
-                                event.preventDefault();
-                                pwClose();
-                            },
-                        }}
                     >
                         <DialogTitle>Insert Password</DialogTitle>
                         <DialogContent>
@@ -124,10 +139,10 @@ const BoardDetail = ({board, onClose}: BoardDetailProps) => {
                                 autoFocus
                                 required
                                 margin="dense"
-                                id="name"
-                                name="email"
+                                id="modalPassword"
+                                name="password"
                                 label="Password"
-                                type="email"
+                                type="password"
                                 fullWidth
                                 variant="standard"
                             />

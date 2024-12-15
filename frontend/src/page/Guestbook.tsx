@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
     Accordion,
     AccordionDetails,
@@ -78,33 +78,37 @@ const Guestbook = (): React.ReactElement => {
         setSelectedId(null);  // 선택된 셀 제거
     };
 
-    useEffect(() => {
-        let isMounted = true;
+    let isMounted = false;
+    const fetchGuestbooks = async () => {
+        if (isMounted) return;
+        isMounted = true;
+        try {
+            const response = await axios.get<PaginatedResponse>(
+                `/board/guestbook?page=${page + 1}&size=${rowsPerPage}`
+            );
 
-        const fetchGuestbooks = async () => {
-            try {
-                const response = await axios.get<PaginatedResponse>(`/board/guestbook?page=${page + 1}&size=${rowsPerPage}`);
-                if (isMounted) {
-                    if (response.data && Array.isArray(response.data.items)) {
-                        const formattedRows = response.data.items.map(row => ({
-                            ...row,
-                            date: formatDate(row.date)
-                        }));
-                        setRows(formattedRows);
-                        setTotalCount(response.data.totalCount);
-                    } else {
-                        console.error('Received data is not in the expected format');
-                    }
-                }
-            } catch (error) {
-                if (isMounted) {
-                    console.error('Error fetching guestbooks:', error);
-                }
+            if (response.data && Array.isArray(response.data.items)) {
+                const formattedRows = response.data.items.map(row => ({
+                    ...row,
+                    date: formatDate(row.date)
+                }));
+                setRows(formattedRows);
+                setTotalCount(response.data.totalCount);
             }
-        };
+        } catch (error) {
+            console.error('Error fetching guestbooks:', error);
+        }
+    };
 
+    // 목록 새로고침 함수
+    const refreshList = useCallback(() => {
         fetchGuestbooks().then(() => isMounted = false);
     }, [page, rowsPerPage]);
+
+    // 초기 데이터 로드
+    useEffect(() => {
+        refreshList();
+    }, [refreshList]);
 
     const handleChangePage = (
         event: React.MouseEvent<HTMLButtonElement> | null,
@@ -195,7 +199,10 @@ const Guestbook = (): React.ReactElement => {
                 </AccordionDetails>
             </Accordion>
             {boardData && (
-                <BoardDetail board={boardData} onClose={deselectBoard}/>
+                <BoardDetail board={boardData} 
+                             onClose={deselectBoard}
+                             onDelete={refreshList}
+                />
             )}
             <Fab
                 color="primary"

@@ -6,13 +6,14 @@ import {
     DialogActions,
     DialogContent,
     DialogContentText,
-    DialogTitle, Paper,
+    DialogTitle,
+    Paper,
     Stack,
     TextField
 } from '@mui/material';
-import {Delete, Edit, Close} from '@mui/icons-material';
+import {Close, Delete, Edit} from '@mui/icons-material';
 import IconButton from '@mui/material/IconButton';
-import {ApiResponse, ErrorResponse} from "@/types/response";
+import {ErrorResponse} from "@/types/response";
 import instance from "@/service/axios";
 
 const ModalState = {
@@ -31,9 +32,10 @@ interface BoardDetailProps {
         content: string,
     }
     onClose: () => void;
+    onDelete?: () => void;
 }
 
-const BoardDetail = ({board, onClose}: BoardDetailProps) => {
+const BoardDetail = ({board, onClose, onDelete}: BoardDetailProps) => {
     const [pwModal, setPwModal] = useState<ModalStateType>(ModalState.CLOSE);
     const [detailState, setDetailState] = useState(true);
 
@@ -62,7 +64,7 @@ const BoardDetail = ({board, onClose}: BoardDetailProps) => {
         
         const fetchDelete = async () => {
             try {
-                const response = await instance.delete<ApiResponse>(
+                const response = await instance.delete(
                     `/board/guestbook/` + board.id,
                     {
                         headers: {
@@ -70,8 +72,12 @@ const BoardDetail = ({board, onClose}: BoardDetailProps) => {
                         }
                     });
                 if (isMounted) {
-                    if (response.data.success) {
-                        alert(response.data.message);
+                    if (response.status === 204) {
+                        alert('삭제되었습니다.');
+                        onClose();
+                        onDelete?.();
+                    } else {
+                        alert('삭제를 실패하였습니다.');
                     }
                 }
             } catch (error: unknown) {

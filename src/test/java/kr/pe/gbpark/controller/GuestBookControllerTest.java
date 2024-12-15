@@ -16,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -152,9 +153,9 @@ class GuestBookControllerTest {
 
         // expected
         mockMvc.perform(delete("/board/guestbook/" + guestBook.getId())
-                        .header("Board-Password", password)
+                        .header("Board-Password", new String(Base64.getEncoder().encode(password.getBytes())))
                         .contentType(APPLICATION_JSON))
-                .andExpect(status().isOk())
+                .andExpect(status().isNoContent())
                 .andDo(print());
     }
 

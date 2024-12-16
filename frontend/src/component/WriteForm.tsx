@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     Box,
     Button,
@@ -30,13 +30,22 @@ interface WriteFormProps {
 
 const WriteForm = ({onSubmit, onCancel, initialData = {}}: WriteFormProps) => {
     const [formData, setFormData] = useState<WriteFormData>({
-        title: initialData.title || '',
-        writer: initialData.writer || '',
-        email: initialData.email || '',
-        password: initialData.password || '',
-        content: initialData.content || '',
-        secret: initialData.secret || false
+        title: '',
+        writer: '',
+        email: '',
+        password: '',
+        content: '',
+        secret: false
     });
+
+    useEffect(() => {
+        if (initialData) {
+            setFormData(prevData => ({
+                ...prevData,
+                ...initialData
+            }));
+        }
+    }, [initialData]);
 
     const [showPassword, setShowPassword] = useState(false);
     const [titleError, setTitleError] = useState(false);

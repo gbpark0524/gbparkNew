@@ -1,5 +1,5 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import WriteForm from '@component/WriteForm';
 import axios from 'axios';
 
@@ -14,6 +14,25 @@ interface WriteFormData {
 
 const FormGuestbook = () => {
     const navigate = useNavigate();
+    const { id } = useParams();
+    const [initialData, setInitialData] = useState<Partial<WriteFormData>>();
+
+    useEffect(() => {
+        if (id) {
+            // 기존 게시글 데이터 로드
+            axios.get(`/board/guestbook/${id}`)
+                .then(response => {
+                    if (response.data.success) {
+                        setInitialData(response.data.data);
+                    }
+                })
+                .catch(error => {
+                    console.error('게시글 로드 중 오류 발생:', error);
+                    alert('게시글을 불러올 수 없습니다.');
+                    navigate('/guestbook');
+                });
+        }
+    }, [id]);
 
     const handleSubmit = async (formData: WriteFormData) => {
         
@@ -36,6 +55,7 @@ const FormGuestbook = () => {
         <WriteForm
             onSubmit={handleSubmit}
             onCancel={handleCancel}
+            initialData={initialData}
         />
     );
 };

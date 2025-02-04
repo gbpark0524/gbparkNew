@@ -174,7 +174,7 @@ class GuestBookControllerTest {
 
         // expected
         mockMvc.perform(delete("/board/guestbook/" + guestBook.getId())
-                        .header("Board-Password", wrongPassword)
+                        .header("Board-Password", new String(Base64.getEncoder().encode(wrongPassword.getBytes())))
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.message").value("wrong password"))
@@ -185,7 +185,7 @@ class GuestBookControllerTest {
     @DisplayName("방명록 삭제 - 존재하지 않는 게시글")
     void deleteGuestBookNotFound() throws Exception {
         // given
-        Long nonExistentId = 999L;
+        long nonExistentId = -999L;
 
         // expected
         mockMvc.perform(delete("/board/guestbook/" + nonExistentId)

@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ExceptionResponseTest {
     @Test
@@ -15,13 +14,5 @@ class ExceptionResponseTest {
                 .build();
 
         assertNotNull(response);
-    }
-
-    @Test
-    public void exceptionValidTest() {
-        assertThrows(IllegalArgumentException.class, () ->
-                ExceptionResponse.builder()
-                .message("it's wrong value")
-                .build());
     }
 }

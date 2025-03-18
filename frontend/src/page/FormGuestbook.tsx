@@ -32,7 +32,7 @@ const FormGuestbook = () => {
                     navigate('/guestbook');
                 });
         }
-    }, [id]);
+    }, [id, navigate]);
 
     const handleSubmit = async (formData: WriteFormData) => {
         

@@ -3,13 +3,15 @@ package kr.pe.gbpark.response;
 import kr.pe.gbpark.domain.NotionPageInfo;
 import kr.pe.gbpark.domain.NotionPageInfo.Properties.Name;
 import kr.pe.gbpark.domain.NotionPageInfo.Properties.Name.TitleContent;
+import kr.pe.gbpark.domain.NotionPageInfo.Properties.Summary;
 
 import java.util.stream.Collectors;
 
 public record NotionResponse(String id, String url, String title, String iconType, String iconContent) {
     public static NotionResponse from(NotionPageInfo pageInfo) {
         Name name = pageInfo.properties().Name();
-        if (name == null || name.title().isEmpty()) {
+        Summary summary = pageInfo.properties().Summary();
+        if (name == null || name.title().isEmpty() || summary == null || summary.rich_text().isEmpty()) {
             return null;
         }
 

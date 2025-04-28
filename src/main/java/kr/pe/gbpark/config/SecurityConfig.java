@@ -1,13 +1,24 @@
 package kr.pe.gbpark.config;
 
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
@@ -33,5 +44,24 @@ public class SecurityConfig {
                 );
 
         return http.build();
+    }
+
+    // 특정 URL에 대해 프레임 허용 필터 추가
+    @Bean
+    public FilterRegistrationBean<Filter> xFrameOptionsFilter() {
+        FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
+        filterRegistrationBean.setFilter(new OncePerRequestFilter() {
+            @Override
+            protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws ServletException, IOException {
+                if (request.getRequestURI().equals("/guestbook")) {
+                    response.setHeader("X-Frame-Options", "ALLOW-FROM https://gather.town");
+                    // 현대 브라우저용 CSP 설정도 추가
+                    response.setHeader("Content-Security-Policy", "frame-ancestors https://gather.town");
+                }
+                filterChain.doFilter(request, response);
+            }
+        });
+        filterRegistrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return filterRegistrationBean;
     }
 }

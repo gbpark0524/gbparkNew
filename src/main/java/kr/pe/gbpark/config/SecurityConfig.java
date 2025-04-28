@@ -54,9 +54,7 @@ public class SecurityConfig {
             @Override
             protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws ServletException, IOException {
                 if (request.getRequestURI().equals("/guestbook")) {
-                    response.setHeader("X-Frame-Options", "ALLOW-FROM https://gather.town");
-                    // 현대 브라우저용 CSP 설정도 추가
-                    response.setHeader("Content-Security-Policy", "frame-ancestors https://gather.town");
+                    response.setHeader("Content-Security-Policy", "frame-ancestors https://*.gather.town https://gather.town");
                 }
                 filterChain.doFilter(request, response);
             }

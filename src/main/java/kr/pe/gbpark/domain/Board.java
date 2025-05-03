@@ -1,13 +1,6 @@
 package kr.pe.gbpark.domain;
 
-import jakarta.persistence.DiscriminatorColumn;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
-import jakarta.persistence.Lob;
+import jakarta.persistence.*;
 import kr.pe.gbpark.util.entity.BaseTimeEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +19,7 @@ public class Board extends BaseTimeEntity {
     protected boolean secret;
 
     @Lob
+    @Column(columnDefinition = "text")
     protected String content;
 
     protected Board(String title, String content, boolean secret) {

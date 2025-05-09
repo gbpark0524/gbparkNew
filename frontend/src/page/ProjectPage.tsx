@@ -9,7 +9,8 @@ import {
     CardMedia,
     Grid,
     Pagination,
-    Typography
+    Typography,
+    Tooltip,
 } from '@mui/material';
 import { ArrowDropDown } from '@mui/icons-material';
 import axios from "axios";
@@ -107,22 +108,30 @@ const ProjectPage = (): React.ReactElement => {
                     <Grid container spacing={3}>
                         {projects.map((project) => (
                             <Grid item xs={12} sm={6} md={4} key={project.id}>
-                                <Card className={styles.projectCard}>
-                                    <CardActionArea onClick={() => handleProjectClick(project.id)}>
-                                        <CardMedia
-                                            component="img"
-                                            height="180"
-                                            image={project.thumbnailUrl || defaultProjectImg}
-                                            alt={project.title}
-                                            className={styles.projectImage}
-                                        />
-                                        <CardContent className={styles.projectContent}>
-                                            <Typography gutterBottom variant="h6" component="div" className={styles.projectTitle}>
-                                                {project.title}
-                                            </Typography>
-                                        </CardContent>
-                                    </CardActionArea>
-                                </Card>
+                                <Tooltip
+                                    title={project.content}
+                                    arrow
+                                    placement="bottom"
+                                    enterDelay={500}
+                                    leaveDelay={200}
+                                >
+                                    <Card className={styles.projectCard}>
+                                        <CardActionArea onClick={() => handleProjectClick(project.id)}>
+                                            <CardMedia
+                                                component="img"
+                                                height="180"
+                                                image={project.thumbnailUrl || defaultProjectImg}
+                                                alt={project.title}
+                                                className={styles.projectImage}
+                                            />
+                                            <CardContent className={styles.projectContent}>
+                                                <Typography gutterBottom variant="h6" component="div" className={styles.projectTitle}>
+                                                    {project.title}
+                                                </Typography>
+                                            </CardContent>
+                                        </CardActionArea>
+                                    </Card>
+                                </Tooltip>
                             </Grid>
                         ))}
                     </Grid>

@@ -127,6 +127,20 @@ const Guestbook = (): React.ReactElement => {
 
     return (
         <div>
+            {boardData && (
+                <BoardDetail board={boardData}
+                             onClose={deselectBoard}
+                             onDelete={refreshList}
+                />
+            )}
+            <Fab
+                color="primary"
+                aria-label="writing guestboard"
+                style={{position: 'fixed', bottom: 30, right: 30}}
+                onClick={() => navigate('/guestbook/write')}
+            >
+                <Create/>
+            </Fab>
             <Accordion defaultExpanded>
                 <AccordionSummary
                     expandIcon={<ArrowDropDown/>}
@@ -199,20 +213,6 @@ const Guestbook = (): React.ReactElement => {
                     </TableContainer>
                 </AccordionDetails>
             </Accordion>
-            {boardData && (
-                <BoardDetail board={boardData}
-                             onClose={deselectBoard}
-                             onDelete={refreshList}
-                />
-            )}
-            <Fab
-                color="primary"
-                aria-label="writing guestboard"
-                style={{position: 'fixed', bottom: 30, right: 30}}
-                onClick={() => navigate('/guestbook/write')}
-            >
-                <Create/>
-            </Fab>
         </div>
     );
 }

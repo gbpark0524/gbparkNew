@@ -1,5 +1,5 @@
 # GBPark
-
+![Image](https://github.com/user-attachments/assets/d917ab9e-1eba-4674-b908-a04ce26f1a76)
 > GBPark의 Springboot 기반의 개인 웹사이트
 
 ## Stack

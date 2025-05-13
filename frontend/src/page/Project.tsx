@@ -16,6 +16,7 @@ import { ArrowDropDown } from '@mui/icons-material';
 import axios from "axios";
 import styles from '@assets/styles/Project.module.scss';
 import defaultProjectImg from '@image/default-project-image.png';
+import { resolveImagePath } from '@utils/imageUtils';
 
 interface PaginatedResponse {
     page: number;
@@ -120,7 +121,7 @@ const Project = (): React.ReactElement => {
                                             <CardMedia
                                                 component="img"
                                                 height="180"
-                                                image={project.thumbnailUrl || defaultProjectImg}
+                                                image={project.thumbnailUrl ? resolveImagePath(project.thumbnailUrl) : defaultProjectImg}
                                                 alt={project.title}
                                                 className={styles.projectImage}
                                             />

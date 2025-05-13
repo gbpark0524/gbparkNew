@@ -13,7 +13,8 @@
       "@component/*": ["./component/*"],
       "@page/*": ["./page/*"],
       "@style/*": ["./assets/style/*"],
-      "@image/*": ["./assets/image/*"]
+      "@image/*": ["./assets/image/*"],
+      "@utils/*": ["./utils/*"],
     },
     "allowJs": true,
     "skipLibCheck": true,

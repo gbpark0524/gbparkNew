@@ -38,7 +38,7 @@ interface ProjectData {
     secret: boolean;
 }
 
-const ProjectPage = (): React.ReactElement => {
+const Project = (): React.ReactElement => {
     const [projects, setProjects] = useState<ProjectData[]>([]);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -152,4 +152,4 @@ const ProjectPage = (): React.ReactElement => {
     );
 }
 
-export default ProjectPage;
+export default Project;

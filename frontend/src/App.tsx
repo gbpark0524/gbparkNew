@@ -6,7 +6,7 @@ import Main from '@page/Main';
 import {Route, Routes} from "react-router";
 import Loading from "@component/Loading";
 import FormGuestbook from "@page/FormGuestbook";
-import ProjectPage from '@page/ProjectPage';
+import Project from '@page/Project';
 
 function App() {
     const [isLoading, setIsLoading] = useState(true);
@@ -30,7 +30,7 @@ function App() {
                     <Route path="/guestbook" element={<Guestbook/>}/>
                     <Route path="/guestbook/write" element={<FormGuestbook/>}/>
                     <Route path="/guestbook/modify/:id" element={<FormGuestbook/>}/>
-                    <Route path="/project" element={<ProjectPage/>}/>
+                    <Route path="/project" element={<Project/>}/>
                     <Route path="/test" element={<Main/>}/>
                     <Route path="/*" element={<Main/>}/>
                 </Routes>
